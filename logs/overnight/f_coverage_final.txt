@@ -1,0 +1,71 @@
+
+=== assess: 1750 records  sources={'sim': 1750}  questions=12
+  answer_files         code=1316  none=434
+  child                present=1340  none=410
+  closed_stages        4-6=746  7+=430  2-3=303  0=164  1=107
+  gap_check            false=1699  true=51
+  hints_left           2-3=1628  1=119  0=3   << under 10: ['0']
+  history_len          0=1135  2-3=376  4-6=175  7+=64
+  message_kind         answer=1750
+  notes                empty=665  short=530  long=197  short+injection=180  near_cap=178
+  offered_set          CLARIFY,FOLLOW_UP,HINT,PROBE,REDIRECT=1289  CLARIFY,FOLLOW_UP,HINT,QUESTION_DONE,REDIRECT=405  PROBE=48  QUESTION_DONE=5  CLARIFY,FOLLOW_UP,PROBE,REDIRECT=3   << under 30: ['QUESTION_DONE', 'CLARIFY,FOLLOW_UP,PROBE,REDIRECT']
+  persona              partial=198  asks_answer=194  terse=193  dont_know=190  off_topic=182  wrong_belief=174  injection=171  code_paster=162  slow=152  strong=134
+  rubric               authored=1750
+  runnable             yes=1750
+  runs                 none=434  pass=397  runtime_error=396  compile_error=220  submit_fail=141  submit_pass=117  timeout=45
+  stage_files          code=1487  none=113  code,repo=105  repo=45
+  stage_kind           write_code=714  explain=552  predict=371  opening=113
+  stage_skills         2-3=931  1=819
+  study_topics         few=820  many=521  none=409
+  style                clean=967  typos=229  vague=130  hinglish=107  sms=105  terse_style=85  dictated=79  rambling=48
+  task                 assess=1750
+  turn_position        0=1135  middle=562  at_cap=53
+  weak_skills          some=1113  none=637
+  withheld             0=1060  1=382  2-3=308
+  pairs covered: 210/262
+
+=== interview: 5186 records  sources={'sim': 4486, 'pair': 300, 'edit': 400}  questions=24
+  answer_files         none=5186
+  channels             text=4999  text,whiteboard=187
+  closed_stages        0=1638  1=1428  2=1108  3-6=1012
+  code_runs            0=5186
+  expected             authored=5186
+  finished_questions   0=4474  1=712
+  hints_left           3-6=2666  1=1261  2=1074  0=185
+  history_len          0=2053  2=1555  3-6=1334  7+=244
+  length               paragraph=2771  long=1607  300+=567  sentence=204  1-5=37
+  level                0=1638  1=1428  2=1108  3=946  4=66
+  offered_set          CLARIFY,FOLLOW_UP,HINT,PROBE,QUESTION_DONE,REDIRECT=2102  CLARIFY,FOLLOW_UP,HINT,PROBE,REDIRECT=1436  CLARIFY,FOLLOW_UP,HINT,QUESTION_DONE,REDIRECT=980  CLARIFY,PROBE,QUESTION_DONE,REDIRECT=363  CLARIFY,FOLLOW_UP,PROBE,QUESTION_DONE,REDIRECT=128  QUESTION_DONE=114  CLARIFY,FOLLOW_UP,QUESTION_DONE,REDIRECT=41  CLARIFY,QUESTION_DONE,REDIRECT=22   << under 30: ['CLARIFY,QUESTION_DONE,REDIRECT']
+  persona              asks_answer=785  terse=660  off_topic=624  wrong_belief=584  injection=549  dont_know=549  code_paster=502  strong=380  partial=350  slow=203
+  probe_options        1=4032  0=1077  2=77
+  question_clock       plenty=4743  <=120=329  0=114
+  runnable             no=5031  yes=155
+  seniority            senior=3403  mid=1539  junior=244
+  stage_clock          60-239=3055  240-600=976  1-59=616  0=499  >600=40
+  stage_files          code=1605  code,image=592  code,markdown=414  image=326  image,markdown=310  markdown=305  code,repo=249  image,repo=179  repo=149  code,excalidraw,repo=142  code,image,repo=142  none=137  code,image,pdf=124  code,image,markdown=86  code,markdown,repo=80  image,markdown,repo=72  excalidraw,markdown,repo,video=70  code,excalidraw,markdown=66  code,repo,video=62  image,pdf=39  pdf=37
+  style                clean=3034  typos=354  vague=351  sms=341  hinglish=232  rambling=220  dictated=187  terse_style=167  messy:dictated=75  messy:sms=75  messy:typos=75  messy:mixed=75
+  withheld             3-6=4554  2=411  7+=221
+  pairs covered: 707/781
+
+=== study: 2641 records  sources={'sim': 2641}  questions=12
+  files                code,diagram,exercise,lesson=1743  code,exercise,lesson=460  code,exercise,lesson,repo=222  diagram,exercise,lesson,repo=216
+  gap_evidence         none=2478  present=163
+  gap_skill            off=2278  on=363
+  kind                 reply=457  concept=370  quote=308  check_code=252  confused=241  add_note=163  attach=162  asks_answer=160  summarise_notes=151  injection=136  off_topic=136  ready=105
+  last_tutor_line      question=1185  statement=934  TRY=311  CHECK_ME=115  opener=96
+  memory               some=2255  empty=386
+  message_kind         reply=457  concept=370  quote=308  check_code=252  confused=241  add_note=163  attach=162  asks_answer=160  summarise_notes=151  injection=136  off_topic=136  ready=105
+  notes                short=1142  empty=516  long=486  near_cap=275  short+injection=211  long+injection=11
+  offered_set          ADD_NOTE,CHECK_ME,EXPLAIN,POINT,REDIRECT,SUGGEST_ASSESS,TRY=2641
+  persona              wrong_belief=281  strong=279  slow=276  asks_answer=271  code_paster=261  partial=260  off_topic=257  dont_know=257  injection=254  terse=245
+  prior_gaps           0=952  1-3=601  cap=572  4-9=516
+  runs                 none=2389  pass=72  compile_error=71  fail=41  runtime_error=38  timeout=30
+  steps                none=953  all=908  some=780
+  study_history        8+=1147  5-7=720  2-4=582  first=96  1=96
+  study_summary        0=2276  1-9=365
+  style                clean=1479  hinglish=227  dictated=218  sms=203  vague=172  typos=163  rambling=107  terse_style=72
+  submodule_status     some_done=1630  all_but_one=629  first_visit=382
+  task                 study=2641
+  pairs covered: 94/98
+
+wrote /Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/data/coverage_train.html

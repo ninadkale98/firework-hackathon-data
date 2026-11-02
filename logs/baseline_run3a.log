@@ -1,0 +1,4 @@
+gpt-5.4: {'ok': 669, 'cached': 856}
+haiku-5.5: {'ok': 669, 'cached': 856}
+qwen3.5-9b: {'ok': 669, 'cached': 856}
+spend: {'anthropic': 69.94, 'openai': 51.05, 'fireworks': 18.35}

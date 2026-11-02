@@ -1,0 +1,643 @@
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    out = await run_session(plan["qids"], bank=bank, interviewer=interviewer,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            candidate=sim, total_minutes=plan["minutes"],
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            max_turns=18, session_tags=tags)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 277, in run_session
+    view = await service.start(1, segments=segments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 246, in start
+    await self._driver.ensure_question(state, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    out = await run_session(plan["qids"], bank=bank, interviewer=interviewer,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            candidate=sim, total_minutes=plan["minutes"],
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            max_turns=18, session_tags=tags)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 277, in run_session
+    view = await service.start(1, segments=segments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 246, in start
+    await self._driver.ensure_question(state, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+[1/60] ai_eng q[502] strong/clean turns=6 spent=0.39
+[2/60] ai_eng q[503] partial/clean turns=7 spent=0.83
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    out = await run_session(plan["qids"], bank=bank, interviewer=interviewer,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            candidate=sim, total_minutes=plan["minutes"],
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            max_turns=18, session_tags=tags)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 277, in run_session
+    view = await service.start(1, segments=segments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 246, in start
+    await self._driver.ensure_question(state, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+[3/60] backend q[490] partial/hinglish turns=8 spent=1.28
+[4/60] ai_eng q[503] wrong_belief/clean turns=8 spent=1.77
+[5/60] embedded q[567] partial/clean turns=8 spent=2.47
+[6/60] embedded q[567] strong/clean turns=7 spent=3.14
+[7/60] backend q[427, 490] strong/typos turns=10 spent=3.62
+[8/60] backend q[490] wrong_belief/clean turns=10 spent=4.16
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    out = await run_session(plan["qids"], bank=bank, interviewer=interviewer,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            candidate=sim, total_minutes=plan["minutes"],
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            max_turns=18, session_tags=tags)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+[9/60] backend q[427] dont_know/clean turns=5 spent=4.37
+[10/60] embedded q[568, 567] wrong_belief/dictated turns=14 spent=5.57
+[11/60] backend q[427] off_topic/clean turns=4 spent=5.70
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    out = await run_session(plan["qids"], bank=bank, interviewer=interviewer,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            candidate=sim, total_minutes=plan["minutes"],
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            max_turns=18, session_tags=tags)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    out = await run_session(plan["qids"], bank=bank, interviewer=interviewer,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            candidate=sim, total_minutes=plan["minutes"],
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            max_turns=18, session_tags=tags)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 277, in run_session
+    view = await service.start(1, segments=segments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 246, in start
+    await self._driver.ensure_question(state, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+[12/60] frontend q[535] off_topic/clean turns=10 spent=6.26
+[13/60] backend q[490] asks_answer/clean turns=13 spent=6.92
+[14/60] embedded q[568] off_topic/clean turns=10 spent=7.86
+[15/60] ai_eng q[502] asks_answer/typos turns=14 spent=8.65
+[16/60] embedded q[568] asks_answer/clean turns=15 spent=9.92
+[17/60] ai_eng q[503, 502] dont_know/clean turns=18 spent=10.99
+[18/60] ai_eng q[503] off_topic/typos turns=11 spent=11.68
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 277, in run_session
+    view = await service.start(1, segments=segments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 246, in start
+    await self._driver.ensure_question(state, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+[19/60] embedded q[567, 568] dont_know/clean turns=18 spent=13.26
+[20/60] backend q[427] terse/terse_style turns=10 spent=13.49
+[21/60] backend q[490] code_paster/clean turns=7 spent=13.86
+[22/60] backend q[427, 490] injection/clean turns=15 spent=14.52
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+[23/60] embedded q[568, 567] injection/hinglish turns=18 spent=16.31
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/questions/normalize/repo.py", line 44, in read_repo
+    archive = zipfile.ZipFile(io.BytesIO(content))
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1385, in __init__
+    self._RealGetContents()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.9_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1452, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+ValueError: A repo must be uploaded as a zip of its folder.
+[24/60] ai_eng q[503] code_paster/rambling turns=10 spent=16.94
+agent reply was not JSON (stop_reason=max_tokens)
+[25/60] backend q[490] slow/clean turns=3 spent=17.09
+[26/60] embedded q[567, 568] code_paster/hinglish turns=9 spent=17.96
+[27/60] embedded q[567] slow/clean turns=3 spent=18.32
+[28/60] embedded q[568, 567] terse/clean turns=18 spent=19.76
+[29/60] ai_eng q[502] slow/typos turns=3 spent=19.98
+[30/60] ai_eng q[502, 503] injection/clean turns=18 spent=21.13
+[31/60] ai_eng q[502] terse/typos turns=18 spent=22.14
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcUd7wgnUoqcQEdNsGF'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcUzvsLSGxswfDjRJha'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcV4JXVBM6btNbvctuc'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcUgU7PeAqCvizw3EYC'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcUi18eHJj5Mhoxi3DF'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcV7BepGXuD6aSQ9RF8'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVAGhFMtMdPDfqyEQR'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcURi71bxiUjVyjQ8BR'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVCHzQxtwb6ydyUXuE'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVEXvP9nayUwfbvXsq'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcUrsC8WRgdzet8nRwc'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVH7wjNE8jR68AXDiS'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVHodnsdYHKAR7P18z'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcUvQWi4okxtnuHcPeF'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVKaXwsk53V7FJaVuM'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVLFTyVmjzFmNiEmmD'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVPvyR7ogseE1x9kGa'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVRMJQzjt2rw5rbMJ6'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVRVz4qNLE7grkFFuL'}
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/gen.py", line 105, in one
+    async def one(plan):
+                      ^^
+        async with sem:
+        ^^^^^^^^^^^^^^^
+            if store.spent(conn, provider) >= cap:
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/engine.py", line 304, in run_session
+    view = await service.submit(
+           ^^^^^^^^^^^^^^^^^^^^^
+        1, question_id=view.question_id, answer=turn.answer, segments=segments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ninad/codepraxis/fullstack_v2/backend/app/services/interview/session/service.py", line 517, in submit
+    await driver.submit_answer(state, answer, segments)
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgdcVVMehcaH9MthSi3nh'}
+{'failed': 29, 'sessions': 31, 'records': 329} total spent 22.42

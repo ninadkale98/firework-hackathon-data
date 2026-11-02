@@ -1,0 +1,189 @@
+{
+  "id": 533,
+  "company_id": null,
+  "name": "Find why typed dynamic forms broke on a config change",
+  "mode": "open-probe",
+  "topics": [
+    "TypeScript at a JSON API boundary: any, type assertions and type erasure",
+    "Discriminated unions, narrowing and exhaustiveness checks with never",
+    "Runtime validation, user-defined type guards, and types derived from config (as const, satisfies, mapped and conditional types)"
+  ],
+  "seniority": "senior",
+  "duration": 12,
+  "status": "ready",
+  "seed_question": "Your admin app draws every form from a JSON field config served by a REST API, through one generic React renderer (TypeScript 7.0, strict, `tsc --noEmit` green in CI). At **09:40** the config service published **v14** of the configs; the frontend did not change. Since then the data-export form crashes (**97 users**), and workspace requests arrive with seat counts like `\"51\"`.\n\nAttached: the form code, the two configs as the API returns them, and the error report.\n\n**What went wrong, and why did the type checker catch none of it? Point to the files.**",
+  "entity_refs": [
+    {
+      "id": 516,
+      "editable": false
+    },
+    {
+      "id": 513,
+      "editable": false
+    },
+    {
+      "id": 514,
+      "editable": false
+    }
+  ],
+  "mcq_choices": [],
+  "question_prompt": "Lead front-end engineer, 6 to 8 years, React and TypeScript. The question follows a JSON-driven form renderer whose field configs come from a REST API: why a config release broke production while tsc stayed green, a teammate's fix PR, a runtime check at the API boundary, and a teammate's generic hook that derives value types from a config. The first probe is the richest (reviewing the PR: what the compiler said in its first commit, what the casts and @ts-expect-error lines in the second hide, and how to type the configs instead); the last is the hardest (judging a teammate's generic hook for typed form values and the page that uses it). Let the candidate go as deep as they can in the time. Press for answers grounded in the files: strong candidates name specific things (`field.options!.map` at FieldInput.tsx line 35, the dataset field with `optionsUrl` and no `options`, `defaultValue: \"5\"`, `value + step` against `value - step` and the 4 in the log, `onChange(e.target.value)` on the number input and the \"20\" sent before 09:40, `getJson<T>` returning `res.json()`, `Record<string, any>`, `kind: FieldKind` on one interface with optional `options`, the multiselect field falling into `default`, `defaultValue: \"false\"` on a checkbox) and say what the compiler can and cannot know. If an answer names nothing from the files, ask for one line or number before moving on. Don't explain any, type assertions, narrowing, discriminated unions, type predicates, mapped types or runtime validation libraries to the candidate.",
+  "answer_key": {
+    "red_flags": [
+      "says to 'add types' or 'turn on strict' when strict is already on and the code is typed, and names nothing from the files",
+      "believes TypeScript types, `as`, `!` or a generic like `getJson<FormConfig>` check the API response at runtime",
+      "concludes v13 was correct and the fix is to send numeric defaults again, though the \"20\" sent at 08:47, before v14, shows the number input writes strings (`onChange(e.target.value)`)"
+    ],
+    "required_concepts": [
+      "The data-export crash is `field.options!.map` in FieldInput.tsx line 35 (the error report's 35:29): v14's `dataset` select arrives with `optionsUrl` and no `options`. The `!` tells the compiler `options` exists without checking anything, and `FieldConfig` is one interface with `kind: FieldKind` and every kind-specific prop optional, so `kind === \"select\"` says nothing about `options`: it is not a discriminated union",
+      "The seat counts: v14 sends `defaultValue: \"5\"` as a string, and with `value: any` the + button's `value + step` is string concatenation, \"5\" + 1 = \"51\" (the - button's `value - step` coerces and gives the number 4, the mixed types in the log). The number input's `onChange(e.target.value)` writes strings too, so typed values (\"20\" at 08:47, before v14, and \"12\") were strings all along; the backend coerced them, which hid it",
+      "tsc is green because nothing it checks touches the data: `getJson<T>` returns `res.json()`, which is `Promise<any>`, so `Promise<FormConfig>` is asserted, never checked; `value: any` and `FormValues = Record<string, any>` switch checking off in the renderer; and types are erased at runtime, so no code anywhere validates what the API sends. The compiler can only prove the code consistent with declared types that were never tied to the data"
+    ],
+    "good_additional_points": [
+      "the multiselect `columns` field is not in FieldKind and falls into `default`, so it renders as a text input, with no compile error because nothing checks the switch is exhaustive",
+      "`includeDeleted` arrives as `defaultValue: \"false\"` and `Boolean(\"false\")` is true, so the checkbox starts checked; `sso` is sent as the string \"true\" unless the user touches it",
+      "validate.ts compares \"51\" with max 250 by coercion, so validation passes strings through",
+      "README: admins change configs with no frontend deploy, so the config is external input to the frontend and needs a runtime contract",
+      "the backend accepted \"51\" and coerced it; it should reject a string for an integer field too",
+      "`res.json()` returning `any` (and `JSON.parse`) is the hole: a fetch wrapper should return `unknown` so callers must check"
+    ]
+  },
+  "probes": [
+    {
+      "id": 1,
+      "next": [
+        {
+          "id": 1,
+          "next": [
+            {
+              "id": 1,
+              "next": [],
+              "hints": [
+                {
+                  "id": 1,
+                  "text": "Where do the literal types of values.seats and values.region come from, and what ties them to the API response?",
+                  "entities": []
+                },
+                {
+                  "id": 2,
+                  "text": "Which fields have no defaultValue? What is their value before the user types, and what is their type?",
+                  "entities": []
+                },
+                {
+                  "id": 3,
+                  "text": "What does FormValuesOf give for a config typed only as FormConfig?",
+                  "entities": []
+                }
+              ],
+              "duration": 3,
+              "editable": [],
+              "entities": [
+                518,
+                511
+              ],
+              "solution": "The type-level code is correct; what it describes is not the data. FormValuesOf maps each field to a key F[\"name\"] and a type from its kind, which only works when the config's type has literal names and kinds: here, the `as const satisfies FormConfig` copy in the page. The real config comes from the API, and `loadFormConfig(...) as Promise<typeof workspaceRequestForm>` asserts that the response is exactly that copy: the opening bug, one level up, and the README says admins change configs without a deploy. Concretely: the copy says defaultValue: 5, the API sends \"5\", so values.seats is typed number while `values.seats + ADMIN_SEATS` sends billedSeats \"51\" and confirms \"51 seats, 714 per month\". initialValues ends in `as FormValuesOf<C>`, and the mapped type ignores required and missing defaults: costCenter is typed string but undefined until typed, so `values.costCenter.trim()` throws on submit exactly when a user follows the help text and leaves it blank (the inputs' `?? \"\"` show the author half knew). region is typed \"eu-west\" | \"us-east\" from the copy; when an admin adds a region, seatPrice reaches assertNever and throws. `config.fields[2].options` depends on field order. And for the other 22 forms, typed only FormConfig, FormValuesOf collapses to an index signature, string | number | boolean | string[] for every key, so `values.seatz` compiles: \"typed values for any form\" holds only for a form with a literal local copy. Keep: value types by kind inside the generic renderer, where the kind is checked at runtime by the schema. Change: a page with business logic owns its contract: a schema for that form (seats an integer, costCenter optional, region a string with a fallback price or an error for unknown regions), parsed from the API response, with the type inferred from it, so its types are true by construction and drift fails loudly at load. Or take that form out of the JSON-driven system. Never derive types from a local copy of runtime data.",
+              "highlights": [],
+              "description": "A teammate wants pages with business logic to get typed values, and opened a PR with a generic hook that derives each field's value type from a form config, plus the workspace request page that uses it. tsc --noEmit passes. Show both files. Ask what they would keep, what they would change, and why. If they ask how many forms there are: 23, as in the README. If they ask what the PR description says: the same sentence as the comment above FormValuesOf. If they ask what one seat costs: 14 a month in eu-west, 12 in us-east, as in seatPrice.",
+              "withheld_solution_parts": [
+                "one level up",
+                "collapses to an index signature",
+                "true by construction"
+              ]
+            }
+          ],
+          "hints": [
+            {
+              "id": 1,
+              "text": "Read isFormConfig line by line. Which properties of a select field does it look at?",
+              "entities": []
+            },
+            {
+              "id": 2,
+              "text": "Feed the data-export response from the opening files through it. What type does the dataset field get?",
+              "entities": []
+            }
+          ],
+          "duration": 2,
+          "editable": [],
+          "entities": [
+            517
+          ],
+          "solution": "Not closed. `data is FormConfig` is a promise the compiler takes on trust: the body of a user-defined type guard is never checked against its predicate (a guard that just returns true compiles). This one checks id, submitUrl, that fields is an array, and that each field has a name key and a kind key. It never looks at the kind's value or any kind-specific prop. Run the opening v14 responses through it: both pass. dataset is then typed SelectField with options: readonly SelectOption[], so the renderer's `field.options.map`, now with no `!`, crashes exactly as before, while the types now say it cannot. seats' \"5\" is typed number, so arithmetic concatenates again; includeDeleted's \"false\" is typed boolean. Any kind string passes `\"kind\" in f`, so a kind the union lacks reaches the default branch at runtime: never is a compile-time proof only, and assertNever throws and takes the form down. (If they asked about the tests: all four use the v13 fixture, the one shape that was always fine, so they could not catch this.) At the boundary: parse, don't assert. One schema per kind, for example zod's z.discriminatedUnion(\"kind\", [...]) with z.literal kinds, required options on select, z.number() for number defaults, and FormConfig = z.infer of that schema so the type and the check cannot drift; loadFormConfig returns only what safeParse accepted. On v14 safeParse fails both: data-export at fields.0.options (\"expected array, received undefined\") and fields.3.defaultValue, workspace-request at fields.1.defaultValue (\"expected number, received string\") and fields.5.defaultValue. On failure: show the form's error state and report the issues with form id and version, rather than render a form that sends wrong data; at most drop a single unknown-kind field if the form still works without it. Don't silently coerce \"5\", which hides the contract break. And ask the config service to validate configs on publish against the same schema (shared or exported as JSON Schema), so a bad config never goes live.",
+          "highlights": [],
+          "description": "The team merged a discriminated union for field configs and replaced getJson<FormConfig> with a runtime check. The renderer now switches on field.kind with no casts or non-null assertions and calls assertNever(field) in its default branch. Show the new module. Ask whether this closes the gap from the opening question; have them walk through isFormConfig. Then ask what they would put at this boundary and what the app should do when a config fails it. If they ask how the guard is tested: four unit tests pass, all built on the v13 workspace-request config (it accepts that config; rejects null, arrays and strings; rejects a config without fields; rejects a field without a kind). If they ask what libraries the app has: zod 4.6.5 is in package.json.",
+          "withheld_solution_parts": [
+            "on trust",
+            "compile-time proof",
+            "parse, don't assert"
+          ]
+        }
+      ],
+      "hints": [
+        {
+          "id": 1,
+          "text": "Take the errors from the first commit one by one. Was any of them wrong about what can happen at runtime?",
+          "entities": []
+        },
+        {
+          "id": 2,
+          "text": "After this PR, what does a user see on the data-export form, and can they submit it?",
+          "entities": []
+        },
+        {
+          "id": 3,
+          "text": "If the config service sent a kind called \"file\" tomorrow, what would tsc say about the renderer after this PR?",
+          "entities": []
+        }
+      ],
+      "duration": 3,
+      "editable": [],
+      "entities": [
+        515,
+        512
+      ],
+      "solution": "Commit 1 had the right instinct, and its 11 errors were true. TS2365 at FieldInput.tsx(28,81), '+' on string | number | boolean, is the \"51\" bug itself; TS2362 at (19,81) is the - button; the TS2322s say a boolean can reach an input's value; validate.ts(15,34) and (16,34) say v may not be a number. Commit 2 silences each one instead of fixing it. `(value as number) + step` still gives \"51\": a type assertion is removed at compile time and checks nothing; `(value ?? \"\") as string` the same. The two `@ts-expect-error value is numeric for number fields` lines state a belief the request log disproves (\"12\", \"20\"); the one on DynamicForm line 27 hides that fields with no default start undefined, and will also hide any future error on that line. `(field.options ?? []).map` turns the crash into a silent failure: no error reaches the tracker, dataset shows only \"Select...\", and because it is required, submit shows \"Dataset is required\" and nobody can export. Adding \"multiselect\" to FieldKind changes nothing at runtime: it still falls into `default` and renders a text input, and the compiler has no reason to object. A single FieldValue = string | number | boolean for every field can never catch `onChange(e.target.value)` on the number input, because string is allowed everywhere. Reject it. Instead, a discriminated union, one interface per kind with a literal kind: NumberField { kind: \"number\"; defaultValue?: number }, SelectField { kind: \"select\"; options: SelectOption[] } (remote options as their own member or kind), MultiSelectField { kind: \"multiselect\"; optionsUrl: string }. A switch on field.kind narrows field, so inside case \"select\" options is required and needs no `!`; per-kind components take value: number and onChange(v: number), which makes `onChange(e.target.value)` a compile error (use valueAsNumber). In `default`, `const unhandled: never = field`: when the union gains a kind the renderer does not handle, tsc reports \"Type 'X' is not assignable to type 'never'\" on that line. And none of this checks the API's data yet.",
+      "highlights": [],
+      "description": "A teammate opened a pull request to fix both problems. Show the diff and the CI type-check log for its two commits. Ask them to review it as they would on the team: what each change does at runtime, what they would approve or reject, and how they would type the field configs instead. Once they propose types, ask what the compiler would report when the config service adds a field kind the renderer does not handle. If they ask whether the PR was tried in a browser: the data-export form now renders without an error. If they ask which kinds v14 sends: text, number, select, multiselect, checkbox, date.",
+      "withheld_solution_parts": [
+        "assertion is removed",
+        "silent failure",
+        "literal kind"
+      ]
+    }
+  ],
+  "seed_hints": [
+    {
+      "id": 1,
+      "text": "Open the data-export config next to FieldInput.tsx. What does the select case assume about every select field?",
+      "entities": []
+    },
+    {
+      "id": 2,
+      "text": "Start from a seats value of \"5\". What does each stepper button compute, and what does typing in the box store?",
+      "entities": []
+    },
+    {
+      "id": 3,
+      "text": "Follow a config from fetch to FieldInput. Where does the compiler last look at its shape?",
+      "entities": []
+    }
+  ],
+  "created_at": "2026-10-04 23:40:52.236037+00:00",
+  "updated_at": "2026-10-05 00:44:17.101748+00:00",
+  "withheld_solution_parts": [
+    "not a discriminated union",
+    "string concatenation",
+    "erased at runtime"
+  ],
+  "max_probes": 3,
+  "seed_duration": 4,
+  "generated_for_assignment_id": null,
+  "description_sections": {
+    "task": "An admin app builds its forms from settings a server sends (a JSON description of each field), in TypeScript, a language whose checker reviews code before it runs. A settings change broke two forms in production, yet the code checks still passed. The candidate explains why, reviews a colleague's fix, judges a check on the data as it enters the app, and decides what to keep of a colleague's design for typed form values.",
+    "signal": "Does this person know what TypeScript checks and where its checks stop, or do they only know to add types?",
+    "audience": "Lead front-end engineers (6 to 8 years) who build React apps in TypeScript. Knowing how TypeScript's checks work, and where they stop, helps.",
+    "implement": "1. Explains what went wrong and why the checker caught none of it, pointing to the files. *(4 min)*\n2. Reviews a colleague's fix: what each change does when the app runs, what to accept or reject, and how the code should describe the settings instead. *(3 min)*\n3. Judges whether the team's new check on incoming settings protects the app, and what to use instead. *(2 min)*\n4. Decides what to keep and what to change in a colleague's design that gives each form typed values. *(3 min)*",
+    "starting_state": "- The app's form code (a small code folder)\n- The two form settings exactly as the server sends them\n- A screenshot of the error report and of the server's log of submitted forms\n- Later: a colleague's fix with the checker's results, the team's new code that checks incoming settings, and a colleague's proposed shared code with the page that uses it"
+  },
+  "seed_highlights": []
+}

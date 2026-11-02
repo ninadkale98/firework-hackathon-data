@@ -1,0 +1,3 @@
+judge: {'ok': 2099} openai spend 143.67
+71 attempt turns in the sample, 496 judge calls
+safety: {'ok': 349} openai spend 148.01

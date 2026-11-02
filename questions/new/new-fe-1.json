@@ -1,0 +1,271 @@
+{
+  "question": {
+    "name": "Why product search shows results for an earlier query",
+    "mode": "open-probe",
+    "topics": [
+      "React data fetching in effects: cleanup, cancellation and out-of-order responses",
+      "Async JavaScript: promises, timers, closures and AbortController",
+      "Caching server data in the browser: cache keys, errors and expiry"
+    ],
+    "seniority": "mid",
+    "duration": 12,
+    "status": "draft",
+    "seed_question": "On the product search page, users type a query and sometimes end up looking at results for an earlier, shorter one: the box says `laptop stand`, the heading says **312 results**, and the list shows lap desks and lapel pins. While they type, the list also changes several times before it settles. The search API returns the right results for every query it is sent. The page is React 19.3 with TypeScript.\n\nAttached: the search code, a user's screenshot, and the browser's network log of one typing session.\n\n**Why does the page end up showing the wrong results? Point to the code and the log.**",
+    "entity_refs": [
+      {
+        "id": "e1",
+        "run": null,
+        "editable": false
+      },
+      {
+        "id": "e2",
+        "run": null,
+        "editable": false
+      },
+      {
+        "id": "e3",
+        "run": null,
+        "editable": false
+      }
+    ],
+    "mcq_choices": [],
+    "question_prompt": "Front-end developer, 2 to 4 years, React and TypeScript. The question follows one search-as-you-type page whose hook fetches in useEffect with no cleanup: why the list ends on an earlier query's results, a teammate's pull request that delays requests and checks the response's query, the candidate's own fix in an editable copy of the hook, and a teammate's proposed browser cache of results. The first probe is the richest (the pull request and the network log recorded with it: why neither change works); the last is the hardest (judging the cache: what its key leaves out, what it does with failed and aborted requests, how old its data gets). Press for answers grounded in the files. Strong candidates name specific things: the effect in useSearch.ts with no return/cleanup; `.then` calling setResults whenever a response arrives; the \"lap\" request sent at 230 ms that took 1840 ms and arrived at 2070, after \"laptop stand\" at 1480; 312 as the total for \"lap\"; the filmstrip going 18, then 1904, then 312; the heading built from the current `query` state while the list comes from the last response; \"Searching...\" gone at 880 ms while requests were still pending; the unused `signal` parameter of searchProducts; in the pull request, the setTimeout that is never cleared (11 requests in the after-log) and `res.query !== query` comparing against the same closure's query. If an answer names nothing from the files, ask for one line or one number before moving on. If they ask whether the server caches search results: no, every request is computed. If they ask about mobile: the same happens there, more often on slow networks. Don't explain effect cleanup, closures, AbortController, debouncing or race conditions to the candidate.",
+    "answer_key": {
+      "red_flags": [
+        "blames the search API or a server cache, though the log shows every response matches its own query",
+        "proposes a debounce as the whole fix: fewer requests, but a slow earlier response can still arrive last",
+        "says React's batching or asynchronous setState causes it, without connecting it to the order the responses arrive in"
+      ],
+      "required_concepts": [
+        "Every change of the text (2 characters or more) runs the effect and starts a new request, and nothing cancels or ignores the earlier ones: the effect in useSearch.ts has no cleanup function, so the list shows whichever response arrives last, not the one for the latest text. Last to arrive wins.",
+        "The log shows the responses arriving out of order: short queries are slow, so \"lap\" (sent at 230 ms, 1840 ms long) arrives at 2070 ms, after \"laptop stand\" (sent at 1260, arrived at 1480). The filmstrip matches: 18 results at 1500, then \"la\"'s 1904 at 1550, then \"lap\"'s 312 from 2100 on, which is the screenshot.",
+        "The heading is built from the current `query` state, while the list and the total come from the last response to arrive, so the two disagree on screen. The fix is to cancel or ignore the previous request in the effect's cleanup (AbortController with the `signal` searchProducts already accepts, or a flag set in the cleanup), so only the current run may set state."
+      ],
+      "good_additional_points": [
+        "the spinner disappears at 880 ms when the first response finishes (`finally(() => setLoading(false))`), while six requests are still pending",
+        "an error from an old request can replace good results, and a success can hide a current error",
+        "clearing the box to under 2 characters empties the list, but a late response can fill it again under no heading",
+        "11 requests for one query: a debounce would cut load on the server, as a separate improvement",
+        "the same race happens when In stock only is toggled while a request is in flight",
+        "a test with a fake API that answers an earlier query later would have caught it"
+      ]
+    },
+    "probes": [
+      {
+        "id": 1,
+        "next": [
+          {
+            "id": 1,
+            "next": [
+              {
+                "id": 1,
+                "next": [],
+                "hints": [
+                  {
+                    "id": 1,
+                    "text": "Type \"lap\", then tick In stock only. What does cachedSearch return?",
+                    "entities": []
+                  },
+                  {
+                    "id": 2,
+                    "text": "What is in the Map after a request fails, or after its signal aborts it?",
+                    "entities": []
+                  },
+                  {
+                    "id": 3,
+                    "text": "The tab stays open all day. What does the Map hold by evening, and how old is it?",
+                    "entities": []
+                  }
+                ],
+                "duration": 3,
+                "editable": [],
+                "entities": [
+                  "e7"
+                ],
+                "run": [],
+                "solution": "Not as written. (1) The key is only the text: `inStockOnly` is not part of the key, so after typing \"lap\" and then ticking In stock only, the hook gets the cached unfiltered results, out-of-stock items included, and the reverse. Every input that changes the response must be in the key. (2) It stores the promise, including a rejected one, forever: a failed request (a 500, a dropped connection) poisons that query until the page reloads. Worse with the previous fix: the first caller's AbortSignal is passed into the cached request, so typing \"lap\" on the way to \"laptop\" aborts that request and the cached rejection is an AbortError; coming back to \"lap\" then returns the aborted promise every time (an error, or nothing if AbortError is ignored). One caller's shared signal must not control a request that others reuse. (3) No expiry and no size limit: prices and stock change every few minutes but a tab stays open all day, so results go stale, and every prefix typed (\"la\", \"lap\", \"lapt\"...) is kept, so memory grows all day. (4) Minor: the key is trimmed and lowercased but the first caller's exact text is what gets sent. What to do: key on everything that shapes the response (normalised text plus inStockOnly plus limit); delete the entry when the promise rejects; don't tie the shared request to one caller's signal (abort only stops that caller from using it, or let it finish and keep it); a short time-to-live plus a size limit (a small LRU); or use a data-fetching library that already does this (TanStack Query with queryKey ['search', q, inStockOnly], a staleTime, request de-duplication, cancellation through its signal, errors not cached, garbage collection of unused entries). Also check the server's Cache-Control: HTTP caching may already be enough for repeat queries. Strong candidates connect (2) to the AbortController from the previous step without being led.",
+                "highlights": [],
+                "description": "A teammate proposes caching search results in the browser so going back to an earlier query is instant, on top of the fixed hook. Show search-cache.ts. Ask whether they would approve it as written, what could go wrong for a user, and what they would do instead. If they ask how long users keep the page open: often all day, in a tab. If they ask how often stock and prices change: every few minutes. If they ask whether the fix from the previous step is merged: yes, the hook now aborts the previous request when the text changes.",
+                "withheld_solution_parts": [
+                  "cached rejection",
+                  "not part of the key",
+                  "shared signal"
+                ]
+              }
+            ],
+            "hints": [
+              {
+                "id": 1,
+                "text": "What does an effect's cleanup function run, and when?",
+                "entities": []
+              },
+              {
+                "id": 2,
+                "text": "searchProducts takes a third argument. What is it for?",
+                "entities": []
+              },
+              {
+                "id": 3,
+                "text": "When a request is cancelled, which of your handlers run?",
+                "entities": []
+              }
+            ],
+            "duration": 2,
+            "editable": [
+              "e6"
+            ],
+            "entities": [
+              "e6"
+            ],
+            "run": [],
+            "solution": "A good version gives the effect a cleanup function so every run cancels or ignores the previous one. Typical: `const controller = new AbortController();` before the call, `searchProducts(query, inStockOnly, controller.signal)` (searchProducts in src/api/search.ts already accepts a signal and nothing passes it), and `return () => controller.abort();`. The catch must ignore the AbortError (`if (controller.signal.aborted) return;` or check `err.name === \"AbortError\"`), otherwise every key press flashes \"Search failed\". `setLoading(false)` must run only for the request that is still current, so the spinner stays until the latest answer arrives. An ignore flag (`let ignore = false; ... return () => { ignore = true; }` and `if (ignore) return;` before each setState) is equally correct for the list; abort also frees the connection and the server work. Optional: a real debounce in the same effect (`const t = setTimeout(..., 250)` and clear it in the cleanup) to cut requests, but it is not what keeps order. Clearing the box below 2 characters runs the cleanup too, so a late response cannot refill the list. The In stock only box is in the dependency array, so changing it also cancels the old request. Weak versions: compare res.query with query inside the closure (always equal), keep a module-level 'latest query' variable updated in render, or debounce only.",
+            "highlights": [],
+            "description": "Show useSearch.ts, a copy of the hook as it was before the pull request, which they can edit. Ask them to change it so the list always matches the text in the box, then walk through their version. Then ask about their code only, one question at a time, choosing what their version leaves open: what happens to a response that arrives after the text has changed; what the error and the spinner show while requests overlap; what happens if the user clears the box while a request is in flight; what happens when the In stock only box changes mid-request. Ask them to attach the lines they mean.",
+            "withheld_solution_parts": [
+              "AbortError",
+              "ignore flag"
+            ]
+          }
+        ],
+        "hints": [
+          {
+            "id": 1,
+            "text": "How many requests does the after-log show, and when does each start?",
+            "entities": []
+          },
+          {
+            "id": 2,
+            "text": "Inside the .then, which query is `query`: the one in the box now, or another?",
+            "entities": []
+          },
+          {
+            "id": 3,
+            "text": "Why could typing fast against the development API not show this?",
+            "entities": []
+          }
+        ],
+        "duration": 3,
+        "editable": [],
+        "entities": [
+          "e4",
+          "e5"
+        ],
+        "run": [],
+        "solution": "It fixes neither problem. The setTimeout is never cleared: the effect has no cleanup, so nothing cancels the timer when the next key arrives. That is a delay, not a debounce: the after-log still shows 11 requests, each starting 300 ms after its key (la at 410, lap at 530 ... laptop stand at 1560). The check `if (res.query !== query) return;` compares the response with `query` from the same effect run's closure, the text that request was sent with, so it is always equal (the API echoes q) and it never drops anything: a stale closure. The last response to arrive still wins: \"lap\" arrives at 2370 ms, after \"laptop stand\" at 1780, and the page ends on 312 results again, now 300 ms later. The spinner still disappears with the first response to finish (1180 ms) while 6 requests are pending, and an error from an old request can still replace good results. The local test could not show the bug: with every answer in about 20 ms, responses never overtake each other. The check also ignores inStockOnly. What to ask for: a cleanup in the effect that clears the timer and cancels or ignores the in-flight request (AbortController, whose signal searchProducts already accepts, or an ignore flag), so only the latest effect run may set state; a test with a fake API that answers an earlier query after a later one.",
+        "highlights": [],
+        "description": "A teammate opened a pull request to fix it. Show the diff and the network log recorded on staging with the pull request applied, typing the same text. Ask them to review it as they would on the team: what each change does when the page runs, whether it fixes the wrong results, and what they would ask the teammate to change. If they ask how it was tested: locally, against a development API where every search answers in about 20 ms. If they ask whether staging matches production: same data and the same response times.",
+        "withheld_solution_parts": [
+          "never drops anything",
+          "not a debounce",
+          "stale closure"
+        ]
+      }
+    ],
+    "seed_hints": [
+      {
+        "id": 1,
+        "text": "In the log, which response arrives last, and which query was it for?",
+        "entities": []
+      },
+      {
+        "id": 2,
+        "text": "Follow one response into useSearch.ts. What decides whether it is shown?",
+        "entities": []
+      },
+      {
+        "id": 3,
+        "text": "Where does the heading get its text, and where does the list get its items?",
+        "entities": []
+      }
+    ],
+    "withheld_solution_parts": [
+      "no cleanup function",
+      "last to arrive wins",
+      "out of order"
+    ],
+    "max_probes": 3,
+    "seed_duration": 4,
+    "description_sections": {
+      "task": "A shop's product search shows results while the user types. Sometimes the page ends up showing results for an earlier, shorter search (the box says \"laptop stand\" but the list shows lap desks). The candidate works out why from the code and a record of the browser's requests, reviews a colleague's fix, writes their own fix, and judges a colleague's idea for remembering past results.",
+      "signal": "Can this person explain, from the code and the request log, why the newest answer is not always the one shown, and fix it?",
+      "audience": "Front-end developers (2 to 4 years) who build React apps in TypeScript. Knowing how React runs code after a change and how the browser sends requests helps.",
+      "implement": "1. Explains why the wrong results appear, pointing to the code and the request log. *(4 min)*\n2. Reviews a colleague's fix and a new request log recorded with it, and says whether it works. *(3 min)*\n3. Changes the search code so the list always matches the text in the box, then explains it. *(2 min)*\n4. Judges a colleague's plan to keep past search results in the browser, and says what could go wrong. *(3 min)*",
+      "starting_state": "- The search page's code (a small code folder)\n- A user's screenshot of the wrong results\n- The browser's record of the requests sent while one user typed\n- Later: a colleague's code change with a new record of requests, a copy of the search code they can edit, and a colleague's proposed code for remembering results"
+    },
+    "seed_highlights": []
+  },
+  "entities": [
+    {
+      "id": "e1",
+      "type": "repo",
+      "source": "author",
+      "meta": {
+        "files": 5,
+        "filename": "web-shop-search",
+        "text_bytes": 3722
+      },
+      "normalized_form": "Repository, 5 files:\n  README.md\n  package.json\n  src/api/search.ts\n  src/search/SearchPage.tsx\n  src/search/useSearch.ts\n\n--- README.md ---\n# web-shop: product search\n\nThe search page lists products as the user types.\n\n- `SearchPage` keeps the text in the box (`query`) and the \"In stock only\" box.\n- `useSearch(query, inStockOnly)` calls the search API once the text is at least\n  2 characters and returns the results, the total, a loading flag and an error.\n- `GET /api/search?q=...&inStock=...&limit=20` returns\n  `{ query, total, items }`; `query` echoes the `q` it was sent.\n\nShort queries match many products and are slower on the server (a two-letter\nquery can take more than a second); long queries usually answer in about 200 ms.\n\nReact 19.3, TypeScript 7.0, Vite. `npm run typecheck` and `npm test` run on\nevery pull request.\n\n--- package.json ---\n{\n  \"name\": \"web-shop\",\n  \"private\": true,\n  \"version\": \"2.41.0\",\n  \"type\": \"module\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"tsc --noEmit && vite build\",\n    \"typecheck\": \"tsc --noEmit\",\n    \"test\": \"vitest run\"\n  },\n  \"dependencies\": {\n    \"react\": \"19.3.0\",\n    \"react-dom\": \"19.3.0\"\n  },\n  \"devDependencies\": {\n    \"@types/react\": \"19.3.0\",\n    \"@types/react-dom\": \"19.3.0\",\n    \"typescript\": \"7.0.2\",\n    \"vite\": \"8.1.0\",\n    \"vitest\": \"5.0.3\"\n  }\n}\n\n--- src/api/search.ts ---\nexport interface Product {\n  id: string;\n  name: string;\n  price: number;\n  inStock: boolean;\n}\n\nexport interface SearchResponse {\n  query: string;\n  total: number;\n  items: Product[];\n}\n\nexport async function searchProducts(\n  query: string,\n  inStockOnly: boolean,\n  signal?: AbortSignal,\n): Promise<SearchResponse> {\n  const params = new URLSearchParams({ q: query, inStock: String(inStockOnly), limit: \"20\" });\n  const res = await fetch(`/api/search?${params}`, { signal });\n  if (!res.ok) throw new Error(`search failed: ${res.status}`);\n  return res.json();\n}\n\n--- src/search/SearchPage.tsx ---\nimport { useState } from \"react\";\nimport { useSearch } from \"./useSearch\";\n\nexport function SearchPage() {\n  const [query, setQuery] = useState(\"\");\n  const [inStockOnly, setInStockOnly] = useState(false);\n  const { results, total, loading, error } = useSearch(query, inStockOnly);\n\n  return (\n    <section className=\"search\">\n      <input\n        type=\"search\"\n        aria-label=\"Search products\"\n        value={query}\n        onChange={(e) => setQuery(e.target.value)}\n      />\n      <label>\n        <input type=\"checkbox\" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />\n        In stock only\n      </label>\n      {loading && <p className=\"spinner\">Searching...</p>}\n      {error && <p role=\"alert\">{error}</p>}\n      {query.trim().length >= 2 && (\n        <h2>\n          Results for \"{query}\" <small>{total} results</small>\n        </h2>\n      )}\n      <ul>\n        {results.map((p) => (\n          <li key={p.id}>\n            {p.name} <span className=\"price\">{p.price.toFixed(2)}</span>\n            {!p.inStock && <span className=\"badge\">Out of stock</span>}\n          </li>\n        ))}\n      </ul>\n    </section>\n  );\n}\n\n--- src/search/useSearch.ts ---\nimport { useEffect, useState } from \"react\";\nimport { searchProducts, type Product } from \"../api/search\";\n\nexport function useSearch(query: string, inStockOnly: boolean) {\n  const [results, setResults] = useState<Product[]>([]);\n  const [total, setTotal] = useState(0);\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState<string | null>(null);\n\n  useEffect(() => {\n    if (query.trim().length < 2) {\n      setResults([]);\n      setTotal(0);\n      return;\n    }\n    setLoading(true);\n    setError(null);\n    searchProducts(query, inStockOnly)\n      .then((res) => {\n        setResults(res.items);\n        setTotal(res.total);\n      })\n      .catch(() => setError(\"Search failed. Try again.\"))\n      .finally(() => setLoading(false));\n  }, [query, inStockOnly]);\n\n  return { results, total, loading, error };\n}\n"
+    },
+    {
+      "id": "e2",
+      "type": "image",
+      "source": "author",
+      "meta": {
+        "filename": "search-screenshot.png",
+        "content_type": "image/png",
+        "normalized_by": "author"
+      },
+      "normalized_form": "A screenshot of the product search page in desktop Chrome, taken by a user a few seconds after they stopped typing.\n\n- The search box contains: `laptop stand`. The \"In stock only\" checkbox is not ticked. No \"Searching...\" text is visible and there is no error message.\n- Heading under the box: **Results for \"laptop stand\"**, and next to it in smaller text: **312 results**.\n- The list below shows six items (the rest are below the fold), each with a price:\n  1. Lap desk with cushion, 34.90\n  2. Lapel pins, set of 6, 12.50\n  3. Laptop sleeve, 13 inch, 19.99\n  4. Lap tray, bamboo, 27.00, with a grey \"Out of stock\" badge\n  5. Laptop backpack, 20 L, 59.00\n  6. Lapis bead bracelet, 22.40\n\n(For the interviewer: none of the six visible items is a laptop stand. 312 is the total the API returns for the query \"lap\"; the API returns 18 for \"laptop stand\", whose first item is \"Laptop stand, aluminium\".)\n"
+    },
+    {
+      "id": "e3",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 42,
+        "filename": "network-log.txt"
+      },
+      "normalized_form": "Chrome DevTools, Network panel, filter \"/api/search\", exported as text. Production, desktop Chrome.\nTimes are milliseconds from the first key press. The user typed \"laptop stand\" at a steady pace,\nthen stopped and waited. \"In stock only\" was off. \"Took\" is the time until the full response arrived.\n\nKey presses (from a keydown listener added for this recording), ms:\n  0 l | 110 a | 230 p | 340 t | 460 o | 570 p | 700 (space) | 820 s | 930 t | 1040 a | 1150 n | 1260 d\n\n#   Request                                                 Start   Took    End  Status  Response: query / total / first item\n1   GET /api/search?q=la&inStock=false&limit=20               110   1420   1530  200     \"la\" / 1904 / \"Lab coat, white\"\n2   GET /api/search?q=lap&inStock=false&limit=20              230   1840   2070  200     \"lap\" / 312 / \"Lap desk with cushion\"\n3   GET /api/search?q=lapt&inStock=false&limit=20             340    610    950  200     \"lapt\" / 96 / \"Laptop sleeve, 13 inch\"\n4   GET /api/search?q=lapto&inStock=false&limit=20            460    420    880  200     \"lapto\" / 94 / \"Laptop sleeve, 13 inch\"\n5   GET /api/search?q=laptop&inStock=false&limit=20           570    390    960  200     \"laptop\" / 94 / \"Laptop sleeve, 13 inch\"\n6   GET /api/search?q=laptop+&inStock=false&limit=20          700    380   1080  200     \"laptop \" / 94 / \"Laptop sleeve, 13 inch\"\n7   GET /api/search?q=laptop+s&inStock=false&limit=20         820    300   1120  200     \"laptop s\" / 31 / \"Laptop stand, aluminium\"\n8   GET /api/search?q=laptop+st&inStock=false&limit=20        930    260   1190  200     \"laptop st\" / 22 / \"Laptop stand, aluminium\"\n9   GET /api/search?q=laptop+sta&inStock=false&limit=20      1040    240   1280  200     \"laptop sta\" / 19 / \"Laptop stand, aluminium\"\n10  GET /api/search?q=laptop+stan&inStock=false&limit=20     1150    230   1380  200     \"laptop stan\" / 18 / \"Laptop stand, aluminium\"\n11  GET /api/search?q=laptop+stand&inStock=false&limit=20    1260    220   1480  200     \"laptop stand\" / 18 / \"Laptop stand, aluminium\"\n\n11 requests, all completed with status 200. None was canceled. None was served from the browser cache.\n\nRequests in the order their responses arrived:\n    880 ms  \"lapto\"\n    950 ms  \"lapt\"\n    960 ms  \"laptop\"\n   1080 ms  \"laptop \"\n   1120 ms  \"laptop s\"\n   1190 ms  \"laptop st\"\n   1280 ms  \"laptop sta\"\n   1380 ms  \"laptop stan\"\n   1480 ms  \"laptop stand\"\n   1530 ms  \"la\"\n   2070 ms  \"lap\"\n\nFilmstrip (screenshots the panel took during the recording):\n     120 ms  \"Searching...\" shown; heading 'Results for \"la\"', 0 results; list empty\n     880 ms  \"Searching...\" gone; heading 'Results for \"laptop s\"', 94 results; first item \"Laptop sleeve, 13 inch\"\n    1500 ms  heading 'Results for \"laptop stand\"', 18 results; first item \"Laptop stand, aluminium\"\n    1550 ms  heading 'Results for \"laptop stand\"', 1904 results; first item \"Lab coat, white\"\n    2100 ms  heading 'Results for \"laptop stand\"', 312 results; first item \"Lap desk with cushion\"\n    5000 ms  unchanged since 2100 ms\n"
+    },
+    {
+      "id": "e4",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 38,
+        "filename": "pr-search-debounce.diff"
+      },
+      "normalized_form": "Pull request: \"Debounce product search and ignore stale responses\"\n\nDescription: Search sent a request on every key press, and old responses could\noverwrite new ones. This waits 300 ms after typing and drops responses whose\nquery is not the current one. Tested locally by typing fast: results are correct.\n\nChecks: typecheck passed; 14 tests passed.\n\ndiff --git a/src/search/useSearch.ts b/src/search/useSearch.ts\nindex 4b1c9e2..a07d3f5 100644\n--- a/src/search/useSearch.ts\n+++ b/src/search/useSearch.ts\n@@ -15,13 +15,18 @@ export function useSearch(query: string, inStockOnly: boolean) {\n     }\n     setLoading(true);\n     setError(null);\n-    searchProducts(query, inStockOnly)\n-      .then((res) => {\n-        setResults(res.items);\n-        setTotal(res.total);\n-      })\n-      .catch(() => setError(\"Search failed. Try again.\"))\n-      .finally(() => setLoading(false));\n+    // Debounce: wait until the user stops typing for 300 ms.\n+    setTimeout(() => {\n+      searchProducts(query, inStockOnly)\n+        .then((res) => {\n+          // Drop responses for old queries.\n+          if (res.query !== query) return;\n+          setResults(res.items);\n+          setTotal(res.total);\n+        })\n+        .catch(() => setError(\"Search failed. Try again.\"))\n+        .finally(() => setLoading(false));\n+    }, 300);\n   }, [query, inStockOnly]);\n \n   return { results, total, loading, error };\n"
+    },
+    {
+      "id": "e5",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 43,
+        "filename": "network-log-after-pr.txt"
+      },
+      "normalized_form": "Chrome DevTools, Network panel, filter \"/api/search\", exported as text. Staging, with the pull request applied;\nthe staging search API is a copy of production with the same data and the same response times.\nTimes are milliseconds from the first key press. The same typing as before: \"laptop stand\", then a stop.\n\"In stock only\" was off.\n\nKey presses (from a keydown listener added for this recording), ms:\n  0 l | 110 a | 230 p | 340 t | 460 o | 570 p | 700 (space) | 820 s | 930 t | 1040 a | 1150 n | 1260 d\n\n#   Request                                                 Start   Took    End  Status  Response: query / total / first item\n1   GET /api/search?q=la&inStock=false&limit=20               410   1420   1830  200     \"la\" / 1904 / \"Lab coat, white\"\n2   GET /api/search?q=lap&inStock=false&limit=20              530   1840   2370  200     \"lap\" / 312 / \"Lap desk with cushion\"\n3   GET /api/search?q=lapt&inStock=false&limit=20             640    610   1250  200     \"lapt\" / 96 / \"Laptop sleeve, 13 inch\"\n4   GET /api/search?q=lapto&inStock=false&limit=20            760    420   1180  200     \"lapto\" / 94 / \"Laptop sleeve, 13 inch\"\n5   GET /api/search?q=laptop&inStock=false&limit=20           870    390   1260  200     \"laptop\" / 94 / \"Laptop sleeve, 13 inch\"\n6   GET /api/search?q=laptop+&inStock=false&limit=20         1000    380   1380  200     \"laptop \" / 94 / \"Laptop sleeve, 13 inch\"\n7   GET /api/search?q=laptop+s&inStock=false&limit=20        1120    300   1420  200     \"laptop s\" / 31 / \"Laptop stand, aluminium\"\n8   GET /api/search?q=laptop+st&inStock=false&limit=20       1230    260   1490  200     \"laptop st\" / 22 / \"Laptop stand, aluminium\"\n9   GET /api/search?q=laptop+sta&inStock=false&limit=20      1340    240   1580  200     \"laptop sta\" / 19 / \"Laptop stand, aluminium\"\n10  GET /api/search?q=laptop+stan&inStock=false&limit=20     1450    230   1680  200     \"laptop stan\" / 18 / \"Laptop stand, aluminium\"\n11  GET /api/search?q=laptop+stand&inStock=false&limit=20    1560    220   1780  200     \"laptop stand\" / 18 / \"Laptop stand, aluminium\"\n\n11 requests, all completed with status 200. None was canceled. None was served from the browser cache.\n\nRequests in the order their responses arrived:\n   1180 ms  \"lapto\"\n   1250 ms  \"lapt\"\n   1260 ms  \"laptop\"\n   1380 ms  \"laptop \"\n   1420 ms  \"laptop s\"\n   1490 ms  \"laptop st\"\n   1580 ms  \"laptop sta\"\n   1680 ms  \"laptop stan\"\n   1780 ms  \"laptop stand\"\n   1830 ms  \"la\"\n   2370 ms  \"lap\"\n\nFilmstrip:\n     120 ms  \"Searching...\" shown; heading 'Results for \"la\"', 0 results; list empty\n    1180 ms  \"Searching...\" gone; heading 'Results for \"laptop stan\"', 94 results; first item \"Laptop sleeve, 13 inch\"\n    1800 ms  heading 'Results for \"laptop stand\"', 18 results; first item \"Laptop stand, aluminium\"\n    1850 ms  heading 'Results for \"laptop stand\"', 1904 results; first item \"Lab coat, white\"\n    2400 ms  heading 'Results for \"laptop stand\"', 312 results; first item \"Lap desk with cushion\"\n    5000 ms  unchanged since 2400 ms\n"
+    },
+    {
+      "id": "e6",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 28,
+        "filename": "useSearch.ts"
+      },
+      "normalized_form": "import { useEffect, useState } from \"react\";\nimport { searchProducts, type Product } from \"../api/search\";\n\nexport function useSearch(query: string, inStockOnly: boolean) {\n  const [results, setResults] = useState<Product[]>([]);\n  const [total, setTotal] = useState(0);\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState<string | null>(null);\n\n  useEffect(() => {\n    if (query.trim().length < 2) {\n      setResults([]);\n      setTotal(0);\n      return;\n    }\n    setLoading(true);\n    setError(null);\n    searchProducts(query, inStockOnly)\n      .then((res) => {\n        setResults(res.items);\n        setTotal(res.total);\n      })\n      .catch(() => setError(\"Search failed. Try again.\"))\n      .finally(() => setLoading(false));\n  }, [query, inStockOnly]);\n\n  return { results, total, loading, error };\n}\n"
+    },
+    {
+      "id": "e7",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 24,
+        "filename": "search-cache.ts"
+      },
+      "normalized_form": "// Proposed by a teammate: src/search/search-cache.ts\n// useSearch would call cachedSearch(query, inStockOnly, controller.signal)\n// instead of searchProducts, keeping the AbortController from your fix.\n// Measured on staging: going back to a query already typed shows results in\n// under 5 ms instead of 200 to 1,800 ms.\n\nimport { searchProducts, type SearchResponse } from \"../api/search\";\n\n// Remember every search so going back to an earlier query is instant.\nconst cache = new Map<string, Promise<SearchResponse>>();\n\nexport function cachedSearch(\n  query: string,\n  inStockOnly: boolean,\n  signal?: AbortSignal,\n): Promise<SearchResponse> {\n  const key = query.trim().toLowerCase();\n  let pending = cache.get(key);\n  if (!pending) {\n    pending = searchProducts(query, inStockOnly, signal);\n    cache.set(key, pending);\n  }\n  return pending;\n}\n"
+    }
+  ]
+}

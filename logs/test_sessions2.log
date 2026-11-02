@@ -1,0 +1,25 @@
+[1/24] frontend q[535] slow/typos turns=3 spent=32.72
+[2/24] ai_eng q[503] slow/typos turns=3 spent=32.95
+[3/24] embedded q[568] slow/terse_style turns=3 spent=33.31
+[4/24] frontend q[535] strong/dictated turns=6 spent=34.33
+[5/24] embedded q[567] strong/hinglish turns=6 spent=35.01
+[6/24] backend q[427, 490] slow/dictated turns=6 spent=35.39
+[7/24] ai_eng q[502, 503] strong/typos turns=7 spent=36.05
+[8/24] backend q[517, 427] strong/clean turns=9 spent=36.87
+[9/24] backend q[427] partial/terse_style turns=5 spent=37.60
+[10/24] backend q[427, 517] code_paster/typos turns=8 spent=38.02
+[11/24] frontend q[535] code_paster/typos turns=10 spent=39.10
+[12/24] embedded q[568, 567] code_paster/terse_style turns=10 spent=39.92
+[13/24] ai_eng q[503] partial/typos turns=9 spent=41.44
+[14/24] frontend q[900004] partial/typos turns=8 spent=41.93
+[15/24] ai_eng q[606] code_paster/hinglish turns=11 spent=42.62
+[16/24] frontend q[535, 900004] slow/rambling turns=6 spent=43.57
+[17/24] ai_eng q[502] strong/typos turns=6 spent=44.68
+[18/24] embedded q[568, 567] partial/dictated turns=15 spent=46.04
+[19/24] embedded q[568, 567] partial/typos turns=11 spent=47.09
+[20/24] backend q[517] partial/dictated turns=6 spent=47.50
+[21/24] embedded q[568] slow/clean turns=5 spent=48.00
+[22/24] backend q[490, 427] partial/terse_style turns=15 spent=48.68
+[23/24] frontend q[900004] strong/dictated turns=9 spent=49.11
+[24/24] ai_eng q[502] partial/hinglish turns=7 spent=49.78
+{'sessions': 24, 'records': 184} total spent 49.78

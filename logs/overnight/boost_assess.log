@@ -1,0 +1,429 @@
+[1/200] assess q618 asks_answer/terse_style turns=3 records=3 spent=41.39
+[2/200] assess q614 strong/dictated turns=4 records=4 spent=41.43
+[3/200] assess q615 partial/clean turns=5 records=5 spent=41.48
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 614 has no probe 1 at path [1, 2, 3, 4, 1]; available: [5]
+[4/200] assess q615 dont_know/clean turns=5 records=5 spent=42.37
+[5/200] assess q617 dont_know/dictated turns=9 records=9 spent=42.54
+[6/200] assess q622 terse/vague turns=12 records=12 spent=42.87
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 618 has no probe 1 at path [1, 2, 3, 1]; available: [4]
+[7/200] assess q627 strong/clean turns=4 records=4 spent=43.17
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 621 has no probe 1 at path [1, 1]; available: [2]
+[8/200] assess q621 injection/clean turns=7 records=7 spent=43.40
+[9/200] assess q616 wrong_belief/terse_style turns=12 records=12 spent=43.51
+[10/200] assess q626 slow/typos turns=12 records=12 spent=43.90
+[11/200] assess q620 off_topic/clean turns=10 records=10 spent=44.23
+[12/200] assess q620 terse/clean turns=5 records=5 spent=44.26
+[13/200] assess q617 off_topic/clean turns=5 records=5 spent=44.56
+[14/200] assess q628 partial/clean turns=9 records=9 spent=44.62
+[15/200] assess q624 strong/clean turns=7 records=7 spent=45.31
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 617 has no probe 1 at path [1, 1]; available: [2]
+[16/200] assess q624 code_paster/clean turns=9 records=9 spent=45.57
+[17/200] assess q616 asks_answer/terse_style turns=12 records=12 spent=46.15
+[18/200] assess q614 asks_answer/clean turns=8 records=8 spent=46.18
+[19/200] assess q615 off_topic/clean turns=6 records=6 spent=46.26
+[20/200] assess q626 partial/clean turns=8 records=8 spent=47.04
+[21/200] assess q622 slow/clean turns=12 records=12 spent=47.08
+[22/200] assess q624 wrong_belief/clean turns=4 records=4 spent=47.43
+[23/200] assess q627 wrong_belief/clean turns=9 records=9 spent=47.72
+[24/200] assess q621 strong/sms turns=5 records=5 spent=47.76
+[25/200] assess q628 dont_know/clean turns=12 records=12 spent=47.84
+[26/200] assess q618 code_paster/vague turns=7 records=7 spent=47.97
+[27/200] assess q614 injection/typos turns=2 records=2 spent=48.17
+[28/200] assess q622 partial/clean turns=11 records=11 spent=48.58
+[29/200] assess q617 slow/clean turns=2 records=2 spent=48.95
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 621 has no probe 1 at path [1, 1]; available: [2]
+[30/200] assess q628 off_topic/clean turns=6 records=6 spent=49.27
+[31/200] assess q618 strong/rambling turns=4 records=4 spent=49.46
+[32/200] assess q616 injection/clean turns=12 records=12 spent=50.23
+[33/200] assess q615 terse/typos turns=6 records=6 spent=50.33
+[34/200] assess q627 asks_answer/typos turns=6 records=6 spent=50.46
+[35/200] assess q622 dont_know/hinglish turns=6 records=6 spent=50.59
+[36/200] assess q626 dont_know/clean turns=12 records=12 spent=51.60
+[37/200] assess q620 slow/clean turns=4 records=4 spent=52.04
+[38/200] assess q620 partial/typos turns=9 records=9 spent=52.17
+[39/200] assess q624 asks_answer/clean turns=12 records=12 spent=52.49
+[40/200] assess q626 off_topic/typos turns=7 records=7 spent=52.68
+[41/200] assess q616 code_paster/typos turns=12 records=12 spent=52.93
+[42/200] assess q615 slow/hinglish turns=5 records=5 spent=52.97
+[43/200] assess q614 code_paster/clean turns=11 records=11 spent=53.17
+[44/200] assess q621 asks_answer/vague turns=5 records=5 spent=53.54
+[45/200] assess q628 terse/clean turns=10 records=10 spent=53.72
+[46/200] assess q627 injection/terse_style turns=12 records=12 spent=53.85
+[47/200] assess q622 off_topic/clean turns=5 records=5 spent=54.02
+[48/200] assess q620 dont_know/clean turns=4 records=4 spent=54.08
+[49/200] assess q614 strong/typos turns=4 records=4 spent=54.77
+[50/200] assess q616 strong/clean turns=6 records=6 spent=54.82
+[51/200] assess q617 partial/clean turns=12 records=12 spent=55.11
+[52/200] assess q618 wrong_belief/clean turns=10 records=10 spent=55.52
+[53/200] assess q628 slow/clean turns=6 records=6 spent=55.54
+[54/200] assess q626 terse/clean turns=12 records=12 spent=56.04
+[55/200] assess q615 partial/typos turns=9 records=9 spent=56.31
+[56/200] assess q618 asks_answer/clean turns=3 records=3 spent=56.62
+[57/200] assess q624 code_paster/sms turns=2 records=2 spent=56.76
+[58/200] assess q617 dont_know/clean turns=6 records=6 spent=56.91
+[59/200] assess q628 partial/clean turns=1 records=1 spent=57.00
+[60/200] assess q624 injection/clean turns=10 records=10 spent=57.68
+[61/200] assess q614 wrong_belief/dictated turns=3 records=3 spent=57.69
+[62/200] assess q620 off_topic/clean turns=8 records=8 spent=57.73
+[63/200] assess q626 slow/clean turns=5 records=5 spent=58.04
+[64/200] assess q616 wrong_belief/clean turns=12 records=12 spent=58.30
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 621 has no probe 1 at path [1, 2, 3, 1]; available: [4]
+[65/200] assess q621 injection/clean turns=8 records=8 spent=58.75
+[66/200] assess q622 terse/clean turns=12 records=12 spent=59.09
+[67/200] assess q627 strong/clean turns=10 records=10 spent=59.15
+[68/200] assess q615 dont_know/vague turns=11 records=11 spent=59.23
+[69/200] assess q617 off_topic/dictated turns=8 records=8 spent=59.25
+[70/200] assess q620 terse/clean turns=5 records=5 spent=59.41
+[71/200] assess q618 injection/hinglish turns=8 records=8 spent=59.78
+[72/200] assess q622 slow/typos turns=11 records=11 spent=59.93
+[73/200] assess q627 wrong_belief/terse_style turns=3 records=3 spent=59.94
+[74/200] assess q616 asks_answer/clean turns=11 records=11 spent=60.93
+[75/200] assess q615 off_topic/rambling turns=7 records=7 spent=61.24
+[76/200] assess q617 terse/vague turns=5 records=5 spent=61.43
+[77/200] assess q626 partial/clean turns=9 records=9 spent=61.79
+[78/200] assess q616 injection/clean turns=5 records=5 spent=61.89
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 626 has no probe 1 at path [1, 1]; available: [2]
+[79/200] assess q624 strong/clean turns=6 records=6 spent=62.58
+[80/200] assess q614 asks_answer/clean turns=12 records=12 spent=62.69
+[81/200] assess q628 off_topic/typos turns=2 records=2 spent=62.86
+[82/200] assess q628 dont_know/clean turns=10 records=10 spent=63.17
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 616 has no probe 1 at path [1, 1]; available: [2]
+[83/200] assess q620 slow/rambling turns=8 records=8 spent=63.31
+[84/200] assess q621 strong/rambling turns=8 records=8 spent=63.57
+[85/200] assess q618 code_paster/hinglish turns=11 records=11 spent=63.70
+[86/200] assess q614 injection/clean turns=6 records=6 spent=64.10
+[87/200] assess q624 wrong_belief/dictated turns=8 records=8 spent=64.14
+[88/200] assess q618 strong/clean turns=4 records=4 spent=64.53
+[89/200] assess q622 partial/clean turns=12 records=12 spent=64.58
+[90/200] assess q627 code_paster/typos turns=10 records=10 spent=65.03
+[91/200] assess q620 partial/hinglish turns=3 records=3 spent=65.26
+[92/200] assess q622 dont_know/sms turns=6 records=6 spent=65.44
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 615 has no probe 1 at path [1, 2, 1]; available: [3]
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 616 has no probe 1 at path [1, 1]; available: [2]
+[93/200] assess q621 wrong_belief/sms turns=5 records=5 spent=65.85
+[94/200] assess q626 off_topic/sms turns=6 records=6 spent=66.13
+[95/200] assess q627 asks_answer/hinglish turns=10 records=10 spent=66.20
+[96/200] assess q615 terse/vague turns=11 records=11 spent=66.67
+[97/200] assess q624 asks_answer/sms turns=7 records=7 spent=66.87
+[98/200] assess q614 code_paster/clean turns=10 records=10 spent=67.05
+[99/200] assess q627 injection/clean turns=10 records=10 spent=67.43
+[100/200] assess q620 dont_know/typos turns=5 records=5 spent=67.44
+[101/200] assess q628 slow/clean turns=1 records=1 spent=67.70
+[102/200] assess q617 partial/terse_style turns=10 records=10 spent=68.20
+[103/200] assess q622 off_topic/typos turns=5 records=5 spent=68.67
+[104/200] assess q626 terse/clean turns=6 records=6 spent=68.97
+[105/200] assess q615 partial/vague turns=3 records=3 spent=69.15
+[106/200] assess q628 terse/clean turns=12 records=12 spent=69.21
+[107/200] assess q618 wrong_belief/typos turns=11 records=11 spent=69.40
+[108/200] assess q621 asks_answer/sms turns=12 records=12 spent=69.90
+[109/200] assess q618 asks_answer/clean turns=4 records=4 spent=70.11
+[110/200] assess q627 code_paster/clean turns=12 records=12 spent=70.32
+[111/200] assess q624 injection/vague turns=11 records=11 spent=70.36
+[112/200] assess q616 wrong_belief/clean turns=6 records=6 spent=70.38
+[113/200] assess q620 off_topic/typos turns=8 records=8 spent=70.76
+[114/200] assess q617 slow/clean turns=8 records=8 spent=71.51
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 615 has no probe 1 at path [1, 1]; available: [2]
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 616 has no probe 1 at path [1, 1]; available: [2]
+[115/200] assess q624 code_paster/typos turns=5 records=5 spent=71.64
+[116/200] assess q614 strong/clean turns=12 records=12 spent=72.07
+[117/200] assess q617 off_topic/typos turns=4 records=4 spent=72.10
+[118/200] assess q622 terse/vague turns=12 records=12 spent=72.16
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 622 has no probe 1 at path [1, 1]; available: [2]
+[119/200] assess q618 injection/typos turns=2 records=2 spent=72.20
+[120/200] assess q617 dont_know/clean turns=8 records=8 spent=72.25
+[121/200] assess q626 slow/rambling turns=10 records=10 spent=72.28
+[122/200] assess q621 injection/dictated turns=10 records=10 spent=72.35
+[123/200] assess q627 strong/clean turns=3 records=3 spent=72.46
+[124/200] assess q614 wrong_belief/typos turns=9 records=9 spent=72.52
+[125/200] assess q620 terse/hinglish turns=3 records=3 spent=72.53
+[126/200] assess q624 strong/dictated turns=3 records=3 spent=72.57
+[127/200] assess q628 partial/clean turns=12 records=12 spent=72.73
+[128/200] assess q620 slow/clean turns=3 records=3 spent=73.09
+[129/200] assess q618 code_paster/hinglish turns=3 records=3 spent=73.14
+[130/200] assess q627 wrong_belief/sms turns=7 records=7 spent=73.44
+[131/200] assess q621 strong/clean turns=3 records=3 spent=73.65
+[132/200] assess q615 off_topic/hinglish turns=8 records=8 spent=74.00
+[133/200] assess q628 dont_know/clean turns=9 records=9 spent=74.04
+[134/200] assess q626 partial/clean turns=11 records=11 spent=74.08
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 614 has no probe 1 at path [1, 2, 3, 4, 1]; available: [5]
+[135/200] assess q614 asks_answer/hinglish turns=12 records=12 spent=74.15
+[136/200] assess q624 wrong_belief/clean turns=4 records=4 spent=74.17
+[137/200] assess q621 code_paster/clean turns=10 records=10 spent=74.35
+[138/200] assess q622 partial/clean turns=4 records=4 spent=74.47
+[139/200] assess q617 terse/clean turns=10 records=10 spent=74.67
+[140/200] assess q620 partial/typos turns=5 records=5 spent=75.17
+[141/200] assess q618 strong/clean turns=2 records=2 spent=75.19
+[142/200] assess q616 code_paster/clean turns=7 records=7 spent=75.47
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 626 has no probe 1 at path [1, 2, 3, 1]; available: [4]
+[143/200] assess q616 injection/clean turns=12 records=12 spent=75.59
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 628 has no probe 1 at path [1, 1]; available: [2]
+[144/200] assess q627 asks_answer/clean turns=9 records=9 spent=75.62
+[145/200] assess q626 dont_know/clean turns=11 records=11 spent=75.71
+[146/200] assess q617 slow/vague turns=12 records=12 spent=75.99
+[147/200] assess q615 terse/rambling turns=11 records=11 spent=76.04
+[148/200] assess q617 partial/clean turns=2 records=2 spent=76.12
+[149/200] assess q628 off_topic/clean turns=12 records=12 spent=76.45
+[150/200] assess q621 wrong_belief/terse_style turns=8 records=8 spent=76.51
+[151/200] assess q614 code_paster/typos turns=10 records=10 spent=76.84
+[152/200] assess q621 asks_answer/clean turns=3 records=3 spent=76.86
+[153/200] assess q622 dont_know/hinglish turns=12 records=12 spent=77.07
+[154/200] assess q615 slow/hinglish turns=10 records=10 spent=77.19
+[155/200] assess q618 wrong_belief/clean turns=4 records=4 spent=77.32
+[156/200] assess q616 strong/clean turns=7 records=7 spent=77.49
+[157/200] assess q626 terse/clean turns=3 records=3 spent=77.75
+[158/200] assess q624 injection/typos turns=8 records=8 spent=78.21
+[159/200] assess q624 asks_answer/clean turns=12 records=12 spent=78.27
+[160/200] assess q622 off_topic/typos turns=12 records=12 spent=78.49
+[161/200] assess q614 strong/sms turns=10 records=10 spent=78.79
+[162/200] assess q620 dont_know/vague turns=4 records=4 spent=78.95
+[163/200] assess q628 slow/clean turns=5 records=5 spent=78.99
+[164/200] assess q615 partial/clean turns=11 records=11 spent=79.31
+[165/200] assess q627 injection/clean turns=12 records=12 spent=79.43
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 627 has no probe 1 at path [1, 1]; available: [2]
+[166/200] assess q621 injection/clean turns=6 records=6 spent=79.67
+[167/200] assess q617 dont_know/vague turns=11 records=11 spent=79.71
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 615 has no probe 1 at path [1, 1]; available: [2]
+[168/200] assess q618 asks_answer/clean turns=9 records=9 spent=80.09
+[169/200] assess q620 off_topic/clean turns=11 records=11 spent=80.21
+[170/200] assess q626 slow/hinglish turns=4 records=4 spent=80.23
+[171/200] assess q627 code_paster/typos turns=5 records=5 spent=80.49
+Traceback (most recent call last):
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_gen.py", line 94, in one
+    out = await run_assess(qid, bank=bank, tutor=tutors, learner=learner,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                           max_turns=12, tags=tags, setup=setup, seed=i)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1419, in run_assess
+    view = await world.assess_prefix(view)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/distill/learn_engine.py", line 1059, in assess_prefix
+    view = await self.submit(view, {"text": _CANNED_ASSESS[i % len(_CANNED_ASSESS)]})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: Question 621 has no probe 1 at path [1, 1]; available: [2]
+[172/200] assess q622 terse/sms turns=12 records=12 spent=80.53
+[173/200] assess q628 partial/clean turns=7 records=7 spent=80.71
+[174/200] assess q614 wrong_belief/dictated turns=11 records=11 spent=80.80
+[175/200] assess q618 injection/typos turns=7 records=7 spent=80.83
+[176/200] assess q620 terse/clean turns=7 records=7 spent=80.94
+[177/200] assess q616 asks_answer/clean turns=12 records=12 spent=81.06
+[178/200] assess q616 wrong_belief/dictated turns=11 records=11 spent=81.29
+[179/200] assess q622 slow/dictated turns=12 records=12 spent=81.36
+[180/200] assess q617 off_topic/clean turns=11 records=11 spent=81.79
+[181/200] assess q624 code_paster/sms turns=11 records=11 spent=81.99
+{'sessions': 181, 'records': 1403, 'failed': 19} spend {'anthropic': 69.94, 'openai': 208.84}

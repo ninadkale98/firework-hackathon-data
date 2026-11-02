@@ -1,0 +1,15 @@
+00:25:53 start
+00:35:29 boost: start extra workers
+01:21:41 boost: study target reached
+01:21:41 study sessions done: [148/350] study q618 code_paster/sms turns=5 records=5 spent=71.81
+01:37:46 boost: interview target reached
+01:37:46 interview sessions done: [149/460] embedded q[565] code_paster/typos turns=9 spent=357.94
+01:49:48 boost: assess target reached
+01:49:48 assess sessions done: [45/170] assess q614 code_paster/terse_style turns=8 records=8 spent=82.96
+01:49:48 boost: all generation stopped: interview=4486 study=2641 assess=1750
+01:59:42 edits+pairs done: {'edits': 400} total spent 362.27 / {'pairs': 300} total spent 363.47
+01:59:42 generation done
+01:59:45 coverage written
+02:17:00 final: judge remaining training turns (GPT-5.4)
+02:32:34 final: judge: judge: {'ok': 9577} openai spend 389.42
+02:32:44 final: FINAL DONE

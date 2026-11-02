@@ -1,0 +1,4 @@
+agent reply was not JSON (stop_reason=max_tokens)
+agent reply was not JSON (stop_reason=max_tokens)
+{'edits': 120} total spent 85.03
+{'pairs': 60} total spent 90.81

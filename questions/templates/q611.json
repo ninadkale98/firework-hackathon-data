@@ -1,0 +1,173 @@
+{
+  "id": 611,
+  "company_id": null,
+  "name": "How the Approve button works",
+  "mode": "open-probe",
+  "topics": [
+    "Oracle APEX page processing and session state",
+    "PL/SQL package design",
+    "Authorization and security",
+    "Query performance"
+  ],
+  "seniority": "senior",
+  "duration": 30,
+  "status": "ready",
+  "seed_question": "This Oracle APEX app lets managers approve purchase requests. The highlighted line runs when a manager presses **Approve**.\n\n**Walk me through how it works:** what happens from the click until the request shows as approved, and where each rule is decided. The whole app is in the repo, so open the files in whatever order you like.",
+  "entity_refs": [
+    {
+      "id": 691,
+      "run": null,
+      "editable": false
+    }
+  ],
+  "mcq_choices": [],
+  "question_prompt": "Let them lead. Do not name a file for them; if they stay in one file, ask 'where does that value come from?' or 'who decides that?'. Press for a flow that crosses at least four files: page process, security setup, package, tables. When an answer is generic ('it checks the user's access'), ask for the file and the line.\n\nNever name a defect, and never point at a detail of a file (a word in a log, a column, a line). Ask open questions first, for example 'what could go wrong in this procedure?' or 'what would you check here?', and let the candidate find it. Give a hint only when they are stuck, use the stage's listed hint, and count it. Do not tell them what a good answer contains, and do not hint that a reason is 'not about speed' or similar.\n\nDo not quote the candidate's materials from memory: when you refer to a file, say 'look at the note' and let them read it. Keep reactions to one short neutral line ('Okay.', 'Go on.'); no praise and no saying whether they are right. Do not summarise their performance or comment on their habits, and do not say what happens next; end with a plain thank you.\n\nMove to the first follow-up when they have traced the flow to the table, or after about nine minutes. Stay inside the 30 minutes.\n\nProbe 1 has two parts: the diagnosis (about three minutes), then the candidate writes `approve_request.sql` (about three minutes) and you question them on the code they wrote (about three minutes). When their code arrives, read it as the candidate's own version. Ask them to walk through it, and ask about their code only: 'what does your code do if the request was already approved?', 'what happens if this statement updates no rows?', 'where does the transaction end and why?', 'what does the caller see when your check fails?', 'which line makes sure this is recorded once?'. Ask one at a time, choose the ones their code leaves open, and ask them to attach the lines they mean. Never say that a case is a defect in the repo.",
+  "answer_key": {
+    "red_flags": [
+      "describes only the highlighted file",
+      "says the authorization 'checks the business unit' without having opened app_setup.sql",
+      "reads the code aloud with no flow",
+      "never asks where G_BU_LIST comes from",
+      "assumes the button's authorization scheme is the only check"
+    ],
+    "required_concepts": [
+      "the click submits the page, the 'Approve request' process runs, it calls request_api.approve_request, which updates purchase_requests",
+      "the button is protected by the IS_MANAGER authorization scheme, which only checks for the manager role in any business unit, not the business unit of the request",
+      "the business unit rule is separate: the package reads the access list set once at login (G_BU_LIST, filled by an application process after authentication) with v('G_BU_LIST')",
+      "the package changes the row and does a commit inside the package"
+    ],
+    "good_additional_points": [
+      "notices the update has no status guard, so a request already approved can be approved again and approved_by overwritten",
+      "notices nothing stops a manager approving their own request",
+      "notices the row_version column exists but is never used",
+      "notices the commit inside the package means the page cannot roll back together with other work",
+      "notices the scheme and the access list are evaluated at different times and can disagree"
+    ]
+  },
+  "probes": [
+    {
+      "id": 1,
+      "run": [],
+      "next": [
+        {
+          "id": 1,
+          "run": [],
+          "next": [
+            {
+              "id": 1,
+              "run": [],
+              "next": [],
+              "hints": [
+                {
+                  "id": 1,
+                  "text": "What can a signed-in manager send in that URL?",
+                  "entities": []
+                }
+              ],
+              "duration": 6,
+              "editable": [],
+              "entities": [
+                686,
+                688
+              ],
+              "solution": "No. P11_BU_ID is an unrestricted item set from the URL, so a manager can change it to any business unit and download its data; the page's scheme only checks for the manager role in any unit. Hiding the button is not authorization. The download must check the business unit against USER_ACCESS on the server (a server-side check) (and the item should have protection on, or not be an item at all). The report's title column now has escaping off, so a title with HTML or script runs in the page, and the CSV writes titles unquoted (commas break the file; a title starting with = or + can run as a formula in a spreadsheet). They only tested their own business unit (7), which cannot show the problem. Follow-up: 'What would you want in place before this merges?' Good answer: a test with a second business unit that must fail, session state protection on for the item, escaping on, CSV quoting, and a review rule that every data endpoint checks access in SQL or PL/SQL.",
+              "highlights": [],
+              "description": "A teammate added a button that downloads a business unit's requests as a CSV file. Their note, which is in front of you, says it is safe. Review the change and the note: would you merge it?",
+              "withheld_solution_parts": [
+                "session state protection",
+                "server-side"
+              ]
+            }
+          ],
+          "hints": [
+            {
+              "id": 1,
+              "text": "What does the plan do with the business unit filter?",
+              "entities": []
+            }
+          ],
+          "duration": 7,
+          "editable": [
+            690
+          ],
+          "entities": [
+            687,
+            690
+          ],
+          "solution": "The access filter wraps the column in a function (instr over G_BU_LIST), and the search uses a leading wildcard on upper(title), so the plan is a full table scan over 2,000,000 rows and a sort, run twice (count and data). The status index is useless because 88% of the rows are APPROVED. The search and status values are concatenated into the SQL string (injection risk and no cursor reuse). Good answer in report-query.sql: bind variables for status and search (for example with a dynamic query using the binds, or a single static query with binds), the access filter as a join or an IN against USER_ACCESS for :APP_USER so it uses an index, a composite index such as (bu_id, status, created_on desc), no count over the whole table (limit or approximate row counts), and an honest answer on the '%x%' search: prefix search, Oracle Text, or require at least three characters. Follow-up: 'They want to search anywhere in the title.' Good answer: Oracle Text (CONTEXT index) or a trigram-like approach, with the trade-off in sync and size.",
+          "highlights": [],
+          "description": "The report takes about 40 seconds for a buyer in the biggest business unit, who searches the titles. Here are the statistics and the execution plan. Rewrite the report's query in the file.",
+          "withheld_solution_parts": [
+            "full table scan",
+            "composite index"
+          ]
+        }
+      ],
+      "hints": [
+        {
+          "id": 1,
+          "text": "Compare the time each value was set with the time of the approval.",
+          "entities": []
+        },
+        {
+          "id": 2,
+          "text": "What does your procedure do when the update changes no rows?",
+          "entities": []
+        }
+      ],
+      "duration": 9,
+      "editable": [
+        692
+      ],
+      "entities": [
+        685,
+        689,
+        692
+      ],
+      "solution": "The access list G_BU_LIST was filled at login (08:02, 3,7,9) and never refreshed, so the package's v('G_BU_LIST') check and the report filter still use the old list. The IS_MANAGER scheme is evaluated once per session (cached TRUE), and the report is cached by user for 600 seconds; the session can last eight hours (28800 s). Fix: read USER_ACCESS live in the package and in the report query instead of a copy in session state; evaluate the scheme for each request or at least for the Approve action; drop or shorten the user cache for this region. Follow-up: 'Fix it without a query on every page view.' Good answer: a short-lived cache keyed on an access version, or evaluate always only for Approve and keep the login list for display. Strong candidates also say the package must not trust the session copy at all for a write. The written fix (approve_request.sql) is judged as code: it checks access live against user_access for the request's own business unit with the manager role (not the session list and not a manager role in any unit); the update is guarded with status = 'SUBMITTED' and the rows updated are checked, so a request already approved or missing gives a clear error; no swallowed exceptions (no when others then null), with meaningful error numbers and messages; the audit row goes in with the status change so they succeed or fail together; the candidate decides where the transaction ends and can say why (a package that commits takes that choice away from the page); it also stops the requester approving their own request (good extra); it names things clearly and has no dynamic SQL. Candidate-code questions (ask only about their code): already approved, zero rows updated, two managers pressing at the same moment, where the commit or rollback sits, what the caller sees, which line makes it recorded once.",
+      "highlights": [],
+      "description": "A manager lost access to one business unit at 09:15. At 11:40 they approved a request from that unit, and they still see its rows in the report. Here are the debug output for that approval and the report's settings. How did that happen? Then write the approval procedure again in the file, so that it does what the comment at the top of the file asks, and walk me through your code.",
+      "withheld_solution_parts": [
+        "evaluated once per session",
+        "cached by user"
+      ]
+    }
+  ],
+  "seed_hints": [
+    {
+      "id": 1,
+      "text": "Follow the call on the highlighted line: which file does it take you to next?",
+      "entities": []
+    },
+    {
+      "id": 2,
+      "text": "Who is allowed to press the button, and where is that decided?",
+      "entities": []
+    }
+  ],
+  "created_at": "2026-10-21 17:12:13.951554+00:00",
+  "updated_at": "2026-10-21 17:52:03.226862+00:00",
+  "withheld_solution_parts": [
+    "any business unit",
+    "set once at login",
+    "no status guard",
+    "commit inside the package"
+  ],
+  "max_probes": 3,
+  "seed_duration": 8,
+  "generated_for_assignment_id": null,
+  "description_sections": {
+    "task": "A small Oracle APEX app lets managers approve purchase requests. The candidate is given its code and explains how pressing the Approve button works, from the click until the request is approved, and where each rule is decided. Three follow-up questions then build on the same code.",
+    "audience": "Senior Oracle APEX developers who write PL/SQL. Knowing APEX session state and authorization schemes helps.",
+    "implement": "1. Explains how the Approve button works and where each rule is decided, moving between the files. *(8 min)*\n2. Works out why a manager who lost access to a business unit could still approve its requests, using a debug log and a settings screen. Then writes the PL/SQL procedure again so it is correct, and explains the code they wrote. *(9 min)*\n3. Rewrites the report's query so it is fast on two million rows. *(7 min)*\n4. Reviews a colleague's change that adds a download button, and says whether it is safe to merge. *(6 min)*",
+    "starting_state": "- A small code project for the app: a short read-me, the database tables, a PL/SQL package, the app's login and security setup, and the code behind page 10 (the request list and the Approve button). The Approve line is highlighted as the starting point.\n- Later: a debug log, a picture of the report's settings and an editable PL/SQL file to write in; a page of database statistics with an editable copy of the report's query; and a colleague's code change with a note"
+  },
+  "seed_highlights": [
+    {
+      "path": "apex/page_10_processes.sql",
+      "end_line": 17,
+      "entity_id": 691,
+      "start_line": 17
+    }
+  ]
+}

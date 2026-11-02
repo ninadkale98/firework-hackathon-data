@@ -1,0 +1,193 @@
+{
+  "id": 535,
+  "company_id": null,
+  "name": "Why a Next.js settings page is stale after a save",
+  "mode": "open-probe",
+  "topics": [
+    "Next.js App Router caching and rendering (static vs dynamic, the data cache)",
+    "Server vs client boundary and request-scoped vs cross-request caching",
+    "Server Actions as public endpoints and on-demand revalidation"
+  ],
+  "seniority": "senior",
+  "duration": 12,
+  "status": "ready",
+  "seed_question": "After an editor saves on the settings page of this internal admin console, a reload of the settings page still shows the old values, for everyone. Separately, a user reportedly saw another user's name in the header. The console is Next.js 16.3 (App Router, React 19), built once with `next build` and run with `next start` in three containers. Attached: the repository, the build output and the upstream API's access log.\n\n**Walk through how this app renders the settings page and handles the save, and say why the saved values do not show up. Point to the files.**",
+  "entity_refs": [
+    {
+      "id": 527,
+      "editable": false
+    },
+    {
+      "id": 529,
+      "editable": false
+    },
+    {
+      "id": 532,
+      "editable": false
+    }
+  ],
+  "mcq_choices": [],
+  "question_prompt": "The candidate is a senior front-end engineer (React, Next.js, TypeScript) who builds App Router apps. The question follows one internal admin console (Next.js 16.3 App Router, Cache Components not enabled, built once with next build and run with next start in three containers): a JSON-driven settings page and an orders list, both reading an upstream REST API with a service token, with the signed-in user coming from GET /me called with the sid session cookie. The opening is why a saved setting does not show up. The first probe is the richest (four sessions shown one user's identity: what each cache layer holds and where the server/client boundary is). Probe 2 is the save action replayed from the command line. The last is the hardest (judge a teammate's force-dynamic plus revalidatePath('/', 'layout') fix against its load test and design targeted revalidation that also works across three containers). Press for answers grounded in the files. Strong candidates name specific things: the circle marker on /settings and the f marker on /orders in the route table; getSettings() in lib/settings.ts passing no cache option; saveSettings in app/settings/actions.ts returning after the PUT with nothing else; the 09:18:40 GET /settings and the GET /settings that only follows the /orders visit in the access log; every PUT logged as auth=service; unstable_cache(..., ['account-summary'], { revalidate: 60 }) in lib/account.ts with sid used only inside the function; the proxy checking only that a sid cookie exists; canEdit in settings-form.tsx; the HTTP 200 for sid=x and the HTTP 500 for the other-site Origin in the replay; the before/after ratio and the 0 vs 3,181 upstream calls in the teammate's table. If an answer names nothing from the files, ask for one line or number before moving on. If they ask what the 09:18:40 GET /settings is: the release pipeline's next build; the containers started at 09:20. If they ask whether the orders page shows the saved values: yes, right after the save. Do not explain static vs dynamic rendering, prerendering, the fetch defaults, unstable_cache, Server Actions or revalidation to the candidate.",
+  "answer_key": {
+    "red_flags": [
+      "says add SSR or use getServerSideProps (a Pages Router API) or turn caching off, without pointing at the route table marker, the fetch or the action",
+      "explains it with the Next.js 14 rule that every fetch is cached by default, without seeing that the page itself was rendered once at build",
+      "claims the Saved toast proves the page re-rendered, or blames the browser cache or the upstream API"
+    ],
+    "required_concepts": [
+      "/settings is marked circle, prerendered as static content: neither the page nor getSettings() uses a Request-time API (cookies(), headers(), searchParams, connection()) or an opt-out such as cache: 'no-store' or dynamic = 'force-dynamic', so next build renders it once. getSettings() is a fetch with no cache option (the default, auto no cache, so no caching is asked for), but because the route is prerendered it runs once, during next build (the 09:18:40 GET /settings), and the result is baked in at build into the HTML and RSC payload every next start serves. A reload makes no upstream call for it",
+      "saveSettings PUTs the values (09:26:19, auth=service) and returns {status: 'saved'} with no revalidation call (revalidatePath, revalidateTag, updateTag or refresh), so the prerendered /settings is never regenerated until the next build. The Saved toast comes only from the action's return value through useActionState, not from a fresh render",
+      "/orders is marked f because it awaits searchParams, so the same getSettings() fetch runs on every request there and the orders page shows the save at once (GET /settings then GET /orders?...limit=50 right after the PUT): whether the fetch result is fresh is decided by the route's rendering, not by the fetch call. The proxy reading the sid cookie does not make /settings dynamic"
+    ],
+    "good_additional_points": [
+      "the smallest fix on one instance is revalidatePath('/settings') in the action (verified: the next request regenerates the page with the new value); a tag on the fetch plus updateTag is the targeted version when several routes read settings",
+      "each of the three containers has its own .next cache, so an invalidation on the instance that ran the action does not reach the other two",
+      "React 19 resets the uncontrolled form after a successful action, so the old defaultValue props reappear right next to the Saved toast",
+      "next dev hides the bug: in development pages are rendered on demand and never cached",
+      "reading cookies() in the page would also make it dynamic, at the cost of a render and an upstream call on every visit",
+      "the log shows GET /me far less often than page loads, a first sign of the identity cache that matters in the next stage"
+    ]
+  },
+  "probes": [
+    {
+      "id": 1,
+      "next": [
+        {
+          "id": 1,
+          "next": [
+            {
+              "id": 1,
+              "next": [],
+              "hints": [
+                {
+                  "id": 1,
+                  "text": "Read the before and after columns. What happens to throughput and to the upstream call count, and is that a fair price for a value that changes a few times a week?",
+                  "entities": []
+                },
+                {
+                  "id": 2,
+                  "text": "Does this change fix the wrong-name report? Which layer is that bug in?",
+                  "entities": []
+                },
+                {
+                  "id": 3,
+                  "text": "How could you refresh only the settings data after a save and leave the page static? What would the save call?",
+                  "entities": []
+                }
+              ],
+              "duration": 3,
+              "editable": [],
+              "entities": [
+                531
+              ],
+              "solution": "The change works for the editor but at a high price. Throughput falls about 25 times (4,048 to 159 requests a second), latency rises from about 4 ms to about 125 ms, and upstream GET /settings goes from 0 to 3,181 in 20 seconds, about one per request. The latency is now the API's 120 ms plus rendering, and 20 connections over 0.125 s is about 160 a second: every view of the console becomes load on the settings API, for a value that changes a few times a week. GET /me stays at 0, and the change does not touch the wrong-name bug: force-dynamic in the root layout does not change the /api/account route handler, and the unstable_cache key is the same (verified: still one user for all four sessions). revalidatePath('/', 'layout') purges the client router cache and invalidates all cached data on every save; with every route dynamic there is little left for it to clear, and on its own it would have fixed /settings, far too broadly. Instead: keep /settings static. In saveSettings call revalidatePath('/settings'), or, since several routes read settings, tag the fetch (next: { tags: ['settings'] }, optionally with cache: 'force-cache' so /orders reads the data cache instead of the API on every request) and call updateTag('settings'). updateTag gives read-your-own-writes: the entry expires at once and the action's own response already carries the new value (verified: circle /settings kept, the action response had the new value, the next request regenerated it). revalidateTag('settings', 'max') serves stale while it refreshes, for route handlers or webhooks. Three containers: the default cache is per instance (memory plus local disk), and updateTag on one instance does not reach the others (verified with two next start copies: the second kept the old value, and with force-cache its /orders too). Either give all instances a shared cache handler (cacheHandler in next.config backed by shared storage, cacheMaxMemorySize: 0) with tag coordination across instances (refreshTags for cacheHandlers), or accept a short time-based revalidate. Also fix the action's authorization and the identity cache.",
+              "highlights": [],
+              "description": "Show teammate-fix.md. Ask whether they would approve it, reading its numbers, and what they would ship instead. If they ask how often settings change: a few times a week; orders change all day. If they ask whether the wrong-name report is in scope: it is a separate bug, worth checking whether this change touches it. If they ask whether the numbers hold in production: they are from one laptop; compare before with after, and the upstream counts.",
+              "withheld_solution_parts": [
+                "one per request",
+                "read-your-own-writes",
+                "per instance"
+              ]
+            }
+          ],
+          "hints": [
+            {
+              "id": 1,
+              "text": "The POST carries a Next-Action header and a made-up cookie, yet it saves. What kind of endpoint is a Server Action?",
+              "entities": []
+            },
+            {
+              "id": 2,
+              "text": "List everything that stops a viewer from saving in the UI. Which of those run on the server for a raw POST?",
+              "entities": []
+            },
+            {
+              "id": 3,
+              "text": "Read saveSettings in the repo again: does it check who is calling before it writes?",
+              "entities": []
+            }
+          ],
+          "duration": 2,
+          "editable": [],
+          "entities": [
+            526
+          ],
+          "solution": "A Server Action is a public endpoint: the form compiles to a POST to the page's route carrying a Next-Action id, and anyone who can send that POST can run it. The id is in the page's HTML for anyone who can load the page, and the replay copies it. Without a cookie the proxy answers 307 to SSO, because proxy.ts only checks that a sid cookie exists. With the made-up sid=x the page loads, the POST returns HTTP 200 with status saved, and the audit shows refundApprovalLimit 10000 written by service:admin-console. What stops a viewer in the UI is the proxy (presence only, not who or which role) and canEdit in settings-form.tsx (the Save button is not rendered and the inputs are disabled), which runs in the browser and comes from /api/account, itself the shared identity from the last stage. Nothing runs inside saveSettings: no session lookup, no role check. The API cannot catch it either: every write is signed with the service token (auth=service), so it never learns who saved. The HTTP 500 is the framework's CSRF defence: Next.js compares the Origin header's host with the Host (or X-Forwarded-Host) header and aborts the action before it runs, so nothing was written. That stops a hostile page in a browser, but it is not authorization: a script can send no Origin, as the first POST did. Fix: in saveSettings read the sid cookie with cookies(), resolve the user per request (not through the shared cache), and refuse anyone who is not an editor (throw or return an error; forbidden() needs the experimental authInterrupts flag); keep the server-side parseSettings validation; ideally pass the user's identity to the API so writes are attributable and the API can enforce the role too.",
+          "highlights": [],
+          "description": "Show action-replay.txt. Ask what it shows about the save path, and what does and does not protect it. If they ask whether sid=x is a real session: no, it is not in the session store. If they ask what the server logged for the HTTP 500: \"`x-forwarded-host` header with value `localhost:3000` does not match `origin` header with value `other-site.example` from a forwarded Server Actions request. Aborting the action.\" then \"Error: Invalid Server Actions request.\" The audit shows nothing was written for it.",
+          "withheld_solution_parts": [
+            "public endpoint",
+            "role check",
+            "not authorization"
+          ]
+        }
+      ],
+      "hints": [
+        {
+          "id": 1,
+          "text": "In lib/account.ts, what does unstable_cache use as its key? Is sid part of it?",
+          "entities": []
+        },
+        {
+          "id": 2,
+          "text": "Compare unstable_cache in lib/account.ts with the React cache() in lib/session.ts: which one survives from one request to the next?",
+          "entities": []
+        },
+        {
+          "id": 3,
+          "text": "The badge is a client component. Where was the user it shows actually chosen?",
+          "entities": []
+        }
+      ],
+      "duration": 3,
+      "editable": [],
+      "entities": [
+        530,
+        528
+      ],
+      "solution": "getAccountSummary(sid) wraps api('/me', bearer sid) in unstable_cache(fn, ['account-summary'], { revalidate: 60 }). unstable_cache keys an entry by its keyParts plus the stringified function and the arguments of the call. The cached function takes no arguments and sid is only read inside it: the source text contains the name sid but never its value, so sid is not in the key. There is one entry per container, account-summary, shared by every request and every user; it sits in that instance's server cache (on disk under .next/cache) for 60 seconds. Whoever fills it first is shown to everyone: all four read u_311. After 60 seconds the first caller is still served the stale entry while a background refresh runs with their own sid, and from then on everyone sees that person, which is why all four changed together. React cache() in lib/session.ts is the opposite: it is request-scoped, deduping within one server render and reset for each request, so it is safe for per-user values. unstable_cache persists across requests (the docs say across deployments too), which is why it leaks between users. The boundary: AccountBadge is a client component that only renders what /api/account returns; the identity is chosen on the server, in the route handler reading the shared cache. The same value drives canEdit in settings-form.tsx, so an editor can lose the Save button and a viewer can be given it. Fix: do not keep identity in a cross-request cache. Resolve /me per request (deduped with React cache()); if the 300 ms call must be cached, key it by user (sid in keyParts or as an argument) and accept that a revoked session stays valid until the entry expires. unstable_cache is replaced by 'use cache' in Next.js 16 but still works on 16.3.8. With 'use cache' (needs cacheComponents: true, which this app does not set) the key is the build id, the function id and the serialized arguments, and closed-over variables are captured as arguments, so sid would be part of the key; cookies() cannot be read inside, so sid is passed in.",
+      "highlights": [],
+      "description": "Show shared-name-report.md and badge-two-tabs.png. Ask why four different signed-in sessions were shown the same person in the header, when the upstream /me returns the right user for each session. Once they locate it, ask what each layer that keeps data here holds (lib/session.ts, lib/account.ts, the badge's client state) and where the user shown in the badge is decided. If they ask whether /me is correct per session: yes, the report shows it. If they ask how long it lasts: about a minute, then all sessions move together to one other person. If they ask whether the four calls hit different containers: no, one container, called directly. If they ask whether the browser ever fetched anyone else's data: no, it renders only what /api/account returns.",
+      "withheld_solution_parts": [
+        "not in the key",
+        "request-scoped",
+        "stale entry"
+      ]
+    }
+  ],
+  "seed_hints": [
+    {
+      "id": 1,
+      "text": "In the route table, which marker is next to /settings, and what does that marker say about when the page is built?",
+      "entities": []
+    },
+    {
+      "id": 2,
+      "text": "Look at getSettings() in lib/settings.ts: what cache option does the fetch pass, and when does that request run for a page with that marker?",
+      "entities": []
+    },
+    {
+      "id": 3,
+      "text": "Read saveSettings in app/settings/actions.ts to the end. After the PUT, what else does it do before returning?",
+      "entities": []
+    }
+  ],
+  "created_at": "2026-10-05 00:02:58.145548+00:00",
+  "updated_at": "2026-10-05 00:45:33.762879+00:00",
+  "withheld_solution_parts": [
+    "baked in at build",
+    "no revalidation call",
+    "decided by the route"
+  ],
+  "max_probes": 3,
+  "seed_duration": 4,
+  "generated_for_assignment_id": null,
+  "description_sections": {
+    "task": "An internal admin tool built with Next.js 16.3 (a web framework for React) has a settings page and an orders list. After someone with edit rights saves a setting, reloading the settings page still shows the old value, and one report says a user briefly saw another user's name at the top of the page. The candidate reads the real code and the real build output, explains how the framework builds and stores the page and what the save does, and works out why a save does not show up. Later they judge a teammate's proposed fix and design a better one.",
+    "signal": "Whether they can explain from the code and build output how Next.js renders and caches this app, rather than naming features.",
+    "audience": "Senior front-end engineers (React, Next.js, TypeScript) who build Next.js App Router apps. Knowing how Next.js decides between building a page in advance and on each visit, how its server caches work, and how Server Actions (server functions a form calls) are reached helps.",
+    "implement": "1. Explains from the code and the build output why a saved setting does not appear, naming what is stored where and what the save does and does not refresh. *(4 min)*\n2. Works out why four different signed-in people saw the same name, and says what each layer of stored data holds and which part runs on the server. *(3 min)*\n3. Reads a replay of the save sent from the command line with a made-up sign-in, and says what protects the save and what does not. *(2 min)*\n4. Judges a teammate's fix against its speed test and designs a way to refresh only what changed. *(3 min)*",
+    "starting_state": "- The app's source code, as a small project they can browse\n- The output of the build command, showing which pages are built once in advance and which are built on every visit\n- The log of the data service (API) the app reads from\n- Later: a report of the wrong-name problem with the raw responses, a screenshot of two browsers showing the same name, a command-line replay of the save, and a teammate's two-line fix with its speed test"
+  },
+  "seed_highlights": []
+}

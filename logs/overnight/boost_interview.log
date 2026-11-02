@@ -1,0 +1,256 @@
+[1/400] backend q[588] strong/clean turns=3 spent=288.78
+[2/400] backend q[588] dont_know/typos turns=5 spent=289.37
+[3/400] embedded q[562] strong/clean turns=8 spent=290.17
+[4/400] frontend q[534] strong/clean turns=7 spent=290.25
+[5/400] backend q[900001] partial/sms turns=9 spent=290.59
+[6/400] ai_eng q[501] partial/sms turns=7 spent=290.71
+[7/400] ai_eng q[514] wrong_belief/clean turns=10 spent=290.81
+[8/400] ai_eng q[507, 514] strong/rambling turns=12 spent=291.72
+[9/400] embedded q[586] partial/clean turns=11 spent=292.16
+[10/400] embedded q[586] dont_know/vague turns=11 spent=292.72
+[11/400] backend q[588] asks_answer/typos turns=4 spent=293.01
+[12/400] frontend q[534, 900003] wrong_belief/vague turns=18 spent=293.89
+[13/400] ai_eng q[494, 514] dont_know/vague turns=18 spent=294.09
+[14/400] frontend q[518] partial/rambling turns=15 spent=294.35
+[15/400] backend q[611] wrong_belief/typos turns=16 spent=294.64
+[16/400] frontend q[900002, 518] dont_know/sms turns=18 spent=295.27
+[17/400] ai_eng q[498] asks_answer/clean turns=11 spent=295.37
+[18/400] embedded q[565, 584] wrong_belief/clean turns=18 spent=295.81
+[19/400] embedded q[562, 565] asks_answer/clean turns=18 spent=296.31
+[20/400] ai_eng q[501] off_topic/clean turns=13 spent=296.65
+[21/400] embedded q[561] off_topic/clean turns=11 spent=296.75
+[22/400] frontend q[518] off_topic/clean turns=16 spent=297.11
+[23/400] frontend q[900002] terse/clean turns=10 spent=297.73
+[24/400] ai_eng q[498] terse/rambling turns=8 spent=297.89
+[25/400] frontend q[534, 518] asks_answer/clean turns=18 spent=298.08
+[26/400] embedded q[566] slow/clean turns=4 spent=298.51
+[27/400] embedded q[563, 566] injection/sms turns=18 spent=298.69
+[28/400] frontend q[534] slow/clean turns=4 spent=298.73
+[29/400] backend q[611] off_topic/clean turns=15 spent=298.99
+[30/400] frontend q[900002, 518] injection/clean turns=18 spent=299.39
+[31/400] embedded q[584] terse/clean turns=12 spent=299.78
+[32/400] ai_eng q[498] code_paster/sms turns=8 spent=300.21
+[33/400] frontend q[900003] code_paster/clean turns=7 spent=300.43
+[34/400] ai_eng q[501, 507] slow/sms turns=6 spent=301.05
+[35/400] frontend q[533] slow/vague turns=3 spent=301.17
+[36/400] ai_eng q[498, 501] injection/typos turns=18 spent=301.50
+[37/400] backend q[588, 426] partial/clean turns=7 spent=301.58
+[38/400] backend q[900001, 426] terse/rambling turns=18 spent=301.75
+[39/400] frontend q[900002] asks_answer/clean turns=11 spent=301.90
+[40/400] backend q[900001, 611] injection/clean turns=18 spent=302.35
+[41/400] backend q[900001] wrong_belief/clean turns=9 spent=302.43
+[42/400] ai_eng q[501, 493] slow/dictated turns=4 spent=302.46
+[43/400] backend q[588] code_paster/clean turns=3 spent=302.68
+[44/400] backend q[426, 611] slow/clean turns=11 spent=302.78
+[45/400] embedded q[561] slow/rambling turns=3 spent=303.03
+[46/400] ai_eng q[496] dont_know/clean turns=11 spent=303.11
+[47/400] backend q[611] code_paster/clean turns=16 spent=303.79
+[48/400] embedded q[563] slow/clean turns=3 spent=303.82
+[49/400] embedded q[565, 562] code_paster/clean turns=17 spent=304.09
+[50/400] backend q[426] off_topic/clean turns=4 spent=304.25
+[51/400] embedded q[563] injection/clean turns=13 spent=305.04
+[52/400] frontend q[533] slow/clean turns=3 spent=305.07
+[53/400] backend q[426] strong/clean turns=5 spent=305.48
+[54/400] ai_eng q[496] off_topic/clean turns=10 spent=305.57
+[55/400] embedded q[563] strong/clean turns=7 spent=305.82
+[56/400] frontend q[533, 518] slow/dictated turns=10 spent=305.99
+[57/400] frontend q[900002] off_topic/rambling turns=5 spent=306.22
+[58/400] embedded q[561, 586] terse/dictated turns=18 spent=306.40
+[59/400] frontend q[900002] injection/hinglish turns=10 spent=306.95
+[60/400] ai_eng q[501] partial/clean turns=8 spent=307.02
+[61/400] embedded q[566, 565] code_paster/clean turns=7 spent=307.25
+[62/400] embedded q[565] terse/clean turns=13 spent=307.36
+[63/400] ai_eng q[514, 493] wrong_belief/clean turns=16 spent=307.70
+[64/400] backend q[588] dont_know/vague turns=6 spent=308.05
+[65/400] ai_eng q[501, 514] wrong_belief/clean turns=15 spent=308.79
+[66/400] ai_eng q[498] code_paster/clean turns=8 spent=308.94
+[67/400] backend q[611] code_paster/clean turns=12 spent=309.12
+[68/400] embedded q[561] slow/clean turns=3 spent=309.91
+[69/400] frontend q[533, 534] asks_answer/sms turns=18 spent=310.18
+[70/400] embedded q[584] terse/clean turns=12 spent=310.49
+[71/400] backend q[589] strong/vague turns=5 spent=310.54
+[72/400] backend q[426, 611] asks_answer/terse_style turns=18 spent=310.68
+[73/400] frontend q[900002] strong/clean turns=7 spent=311.23
+[74/400] backend q[900001] off_topic/clean turns=9 spent=311.92
+[75/400] backend q[900001] off_topic/clean turns=11 spent=312.12
+[76/400] frontend q[900003, 900002] terse/typos turns=18 spent=312.49
+[77/400] frontend q[534, 900003] strong/clean turns=15 spent=312.96
+[78/400] embedded q[562] strong/clean turns=5 spent=313.13
+[79/400] frontend q[533] wrong_belief/clean turns=10 spent=313.43
+[80/400] ai_eng q[498] injection/terse_style turns=15 spent=313.53
+[81/400] backend q[588] off_topic/clean turns=5 spent=313.70
+[82/400] ai_eng q[496, 507] off_topic/hinglish turns=18 spent=314.15
+[83/400] embedded q[565] injection/clean turns=16 spent=314.31
+[84/400] backend q[589] partial/typos turns=5 spent=314.98
+[85/400] backend q[611] partial/clean turns=13 spent=315.40
+[86/400] ai_eng q[514] dont_know/clean turns=12 spent=315.51
+[87/400] embedded q[563, 584] terse/clean turns=18 spent=315.65
+[88/400] ai_eng q[496] injection/clean turns=10 spent=315.87
+[89/400] ai_eng q[493] slow/clean turns=3 spent=316.10
+[90/400] ai_eng q[514, 493] terse/typos turns=18 spent=316.73
+[91/400] backend q[589] strong/clean turns=7 spent=316.81
+[92/400] embedded q[584] asks_answer/clean turns=13 spent=317.43
+[93/400] frontend q[900002, 533] partial/sms turns=9 spent=317.83
+[94/400] ai_eng q[493, 494] code_paster/sms turns=8 spent=317.94
+[95/400] frontend q[900002] off_topic/clean turns=10 spent=318.13
+[96/400] frontend q[533, 534] strong/vague turns=17 spent=318.61
+[97/400] ai_eng q[514] terse/vague turns=18 spent=318.92
+[98/400] embedded q[586] asks_answer/clean turns=14 spent=320.70
+[99/400] embedded q[563] terse/clean turns=18 spent=320.85
+[100/400] frontend q[533] off_topic/dictated turns=11 spent=320.94
+[101/400] ai_eng q[498] off_topic/vague turns=12 spent=321.36
+[102/400] backend q[611] asks_answer/clean turns=15 spent=321.47
+[103/400] frontend q[534, 518] partial/hinglish turns=18 spent=321.88
+[104/400] ai_eng q[498, 507] terse/clean turns=18 spent=322.75
+[105/400] ai_eng q[493] slow/clean turns=3 spent=322.78
+[106/400] frontend q[518] partial/sms turns=15 spent=323.12
+[107/400] embedded q[563, 584] injection/clean turns=18 spent=323.73
+[108/400] embedded q[561] off_topic/hinglish turns=11 spent=324.11
+[109/400] backend q[426, 611] dont_know/clean turns=18 spent=325.12
+[110/400] frontend q[900002] wrong_belief/sms turns=8 spent=325.23
+[111/400] backend q[588, 426] dont_know/clean turns=8 spent=325.28
+[112/400] embedded q[586] off_topic/rambling turns=15 spent=325.47
+[113/400] backend q[426, 588] strong/clean turns=5 spent=325.51
+[114/400] frontend q[900003, 518] terse/clean turns=18 spent=326.01
+[115/400] embedded q[586] partial/clean turns=10 spent=326.17
+[116/400] backend q[588] wrong_belief/sms turns=3 spent=326.52
+[117/400] frontend q[900003] code_paster/clean turns=6 spent=326.59
+[118/400] ai_eng q[493] code_paster/clean turns=9 spent=327.39
+[119/400] ai_eng q[496, 498] wrong_belief/clean turns=18 spent=327.83
+[120/400] backend q[611] terse/clean turns=18 spent=328.01
+[121/400] embedded q[584, 566] strong/clean turns=12 spent=328.42
+[122/400] backend q[611, 900001] partial/clean turns=18 spent=328.59
+[123/400] ai_eng q[493] dont_know/clean turns=15 spent=328.69
+[124/400] frontend q[533] dont_know/sms turns=10 spent=329.18
+[125/400] backend q[589] slow/clean turns=3 spent=329.65
+[126/400] frontend q[518] dont_know/clean turns=16 spent=329.85
+[127/400] frontend q[900002] asks_answer/clean turns=11 spent=330.20
+[128/400] backend q[589] terse/clean turns=7 spent=330.51
+[129/400] embedded q[565] asks_answer/clean turns=10 spent=330.59
+[130/400] ai_eng q[498] partial/clean turns=10 spent=330.77
+[131/400] embedded q[586] slow/clean turns=7 spent=330.95
+[132/400] embedded q[565] asks_answer/clean turns=14 spent=331.16
+[133/400] backend q[426] asks_answer/clean turns=5 spent=331.49
+[134/400] embedded q[584] off_topic/clean turns=9 spent=331.97
+[135/400] ai_eng q[514] asks_answer/vague turns=9 spent=332.06
+[136/400] ai_eng q[507] wrong_belief/clean turns=11 spent=332.14
+[137/400] embedded q[566, 584] slow/clean turns=3 spent=332.62
+[138/400] embedded q[586] partial/vague turns=7 spent=332.67
+[139/400] embedded q[562, 566] wrong_belief/clean turns=13 spent=332.97
+[140/400] frontend q[900003] terse/clean turns=13 spent=333.24
+[141/400] backend q[900001] strong/clean turns=6 spent=333.29
+[142/400] ai_eng q[498] slow/sms turns=3 spent=333.39
+[143/400] backend q[588] dont_know/clean turns=4 spent=333.42
+[144/400] frontend q[518, 533] terse/clean turns=18 spent=334.27
+[145/400] ai_eng q[496, 494] wrong_belief/clean turns=18 spent=334.92
+[146/400] frontend q[518] dont_know/clean turns=15 spent=335.08
+[147/400] ai_eng q[514] code_paster/vague turns=6 spent=335.14
+[148/400] frontend q[900003] terse/clean turns=13 spent=335.63
+[149/400] backend q[900001, 611] strong/vague turns=18 spent=335.79
+[150/400] ai_eng q[493] terse/clean turns=15 spent=336.14
+[151/400] frontend q[900003] off_topic/clean turns=8 spent=336.21
+[152/400] embedded q[563] asks_answer/clean turns=10 spent=336.57
+[153/400] backend q[426, 589] terse/clean turns=15 spent=336.94
+[154/400] ai_eng q[494, 514] dont_know/clean turns=18 spent=337.08
+[155/400] ai_eng q[496] partial/clean turns=8 spent=337.55
+[156/400] backend q[426] wrong_belief/typos turns=4 spent=337.75
+[157/400] frontend q[900003] wrong_belief/terse_style turns=11 spent=337.81
+[158/400] frontend q[533] strong/clean turns=5 spent=338.18
+[159/400] frontend q[900003, 518] asks_answer/clean turns=18 spent=338.41
+[160/400] backend q[426, 589] asks_answer/typos turns=13 spent=338.48
+[161/400] embedded q[565] dont_know/clean turns=14 spent=339.28
+[162/400] backend q[589] injection/typos turns=5 spent=339.73
+[163/400] frontend q[900003] code_paster/clean turns=8 spent=340.18
+[164/400] frontend q[900003] code_paster/dictated turns=6 spent=340.30
+[165/400] ai_eng q[496] off_topic/clean turns=9 spent=340.49
+[166/400] ai_eng q[498] off_topic/clean turns=11 spent=340.75
+[167/400] frontend q[534, 533] code_paster/rambling turns=10 spent=340.84
+[168/400] embedded q[566, 586] off_topic/typos turns=18 spent=341.03
+[169/400] backend q[900001, 426] terse/clean turns=18 spent=341.21
+[170/400] ai_eng q[514] partial/clean turns=8 spent=341.58
+[171/400] backend q[611] asks_answer/typos turns=11 spent=342.12
+[172/400] embedded q[586] off_topic/clean turns=9 spent=342.25
+[173/400] backend q[426] asks_answer/clean turns=5 spent=342.40
+[174/400] embedded q[586] wrong_belief/clean turns=12 spent=342.60
+[175/400] backend q[589] slow/clean turns=3 spent=342.70
+[176/400] ai_eng q[507] slow/clean turns=6 spent=342.78
+[177/400] embedded q[566] strong/clean turns=7 spent=342.92
+[178/400] ai_eng q[507] code_paster/clean turns=9 spent=343.37
+[179/400] ai_eng q[501] code_paster/clean turns=4 spent=343.45
+[180/400] frontend q[518] dont_know/vague turns=14 spent=343.69
+[181/400] backend q[611] terse/vague turns=18 spent=344.02
+[182/400] embedded q[584] asks_answer/rambling turns=12 spent=344.13
+[183/400] embedded q[562, 566] terse/rambling turns=18 spent=344.31
+[184/400] backend q[589, 588] terse/dictated turns=10 spent=344.47
+[185/400] ai_eng q[507, 501] wrong_belief/clean turns=18 spent=344.63
+[186/400] ai_eng q[498] injection/sms turns=13 spent=344.92
+[187/400] embedded q[562] strong/rambling turns=7 spent=345.13
+[188/400] embedded q[586, 566] code_paster/clean turns=18 spent=345.46
+[189/400] embedded q[563, 584] code_paster/clean turns=11 spent=345.58
+[190/400] frontend q[533] injection/clean turns=11 spent=345.77
+[191/400] frontend q[518] injection/clean turns=18 spent=346.04
+[192/400] backend q[589] slow/vague turns=3 spent=346.12
+[193/400] embedded q[562] wrong_belief/sms turns=15 spent=346.26
+[194/400] embedded q[563] slow/clean turns=3 spent=346.69
+[195/400] ai_eng q[501] partial/dictated turns=8 spent=346.76
+[196/400] frontend q[900003, 534] injection/clean turns=18 spent=347.19
+[197/400] ai_eng q[493] injection/clean turns=9 spent=347.31
+[198/400] embedded q[565] slow/hinglish turns=3 spent=347.34
+[199/400] backend q[426] off_topic/clean turns=3 spent=347.36
+[200/400] frontend q[900003, 900002] injection/clean turns=17 spent=347.51
+[201/400] ai_eng q[496] strong/clean turns=7 spent=347.65
+[202/400] embedded q[561] off_topic/clean turns=12 spent=347.93
+[203/400] backend q[611, 900001] asks_answer/clean turns=18 spent=348.07
+[204/400] frontend q[534, 900003] slow/terse_style turns=4 spent=348.11
+[205/400] frontend q[534] dont_know/sms turns=10 spent=348.18
+[206/400] backend q[900001, 611] terse/clean turns=18 spent=348.36
+[207/400] frontend q[518, 533] terse/hinglish turns=18 spent=348.81
+[208/400] backend q[900001] wrong_belief/clean turns=13 spent=349.19
+[209/400] backend q[589] injection/clean turns=6 spent=349.21
+[210/400] backend q[588] strong/clean turns=4 spent=349.45
+[211/400] ai_eng q[493] partial/clean turns=8 spent=349.62
+[212/400] ai_eng q[498] wrong_belief/clean turns=8 spent=349.86
+[213/400] frontend q[900002] injection/vague turns=6 spent=349.91
+[214/400] ai_eng q[501] off_topic/clean turns=9 spent=349.98
+[215/400] frontend q[518] wrong_belief/clean turns=13 spent=350.28
+[216/400] backend q[588] terse/terse_style turns=4 spent=350.30
+[217/400] backend q[900001, 426] off_topic/clean turns=15 spent=350.44
+[218/400] embedded q[584] partial/hinglish turns=7 spent=350.52
+[219/400] embedded q[586, 563] injection/dictated turns=18 spent=350.68
+[220/400] embedded q[563] wrong_belief/clean turns=13 spent=350.80
+[221/400] frontend q[533] slow/hinglish turns=3 spent=351.02
+[222/400] ai_eng q[507] asks_answer/clean turns=17 spent=351.19
+[223/400] backend q[426] dont_know/clean turns=5 spent=351.22
+[224/400] ai_eng q[496] injection/sms turns=8 spent=351.55
+[225/400] embedded q[566] dont_know/dictated turns=7 spent=352.02
+[226/400] ai_eng q[498] partial/clean turns=9 spent=352.40
+[227/400] frontend q[518, 533] code_paster/hinglish turns=18 spent=352.75
+[228/400] embedded q[563] asks_answer/clean turns=13 spent=353.04
+[229/400] ai_eng q[498] dont_know/clean turns=13 spent=353.16
+[230/400] frontend q[518, 534] strong/clean turns=18 spent=353.31
+[231/400] frontend q[533] injection/clean turns=11 spent=353.41
+[232/400] frontend q[533] slow/rambling turns=3 spent=353.58
+[233/400] embedded q[586, 561] code_paster/clean turns=18 spent=353.76
+[234/400] ai_eng q[493] wrong_belief/clean turns=13 spent=353.91
+[235/400] embedded q[566, 584] off_topic/clean turns=16 spent=354.08
+[236/400] ai_eng q[507] off_topic/clean turns=11 spent=354.16
+[237/400] backend q[611] slow/hinglish turns=7 spent=354.35
+[238/400] backend q[426] wrong_belief/clean turns=5 spent=354.43
+[239/400] backend q[900001, 589] asks_answer/clean turns=18 spent=354.65
+[240/400] ai_eng q[501] asks_answer/clean turns=10 spent=355.42
+[241/400] backend q[426] slow/clean turns=3 spent=355.43
+[242/400] embedded q[563, 566] slow/clean turns=5 spent=355.57
+[243/400] frontend q[518, 900002] injection/clean turns=18 spent=355.72
+[244/400] frontend q[518] slow/clean turns=9 spent=355.92
+[245/400] frontend q[900003] off_topic/clean turns=9 spent=356.00
+[246/400] backend q[900001] injection/clean turns=12 spent=356.20
+[247/400] frontend q[900002, 900003] asks_answer/sms turns=16 spent=356.43
+[248/400] backend q[426] terse/sms turns=4 spent=356.45
+[249/400] frontend q[518] slow/typos turns=7 spent=356.58
+[250/400] ai_eng q[507, 498] strong/typos turns=15 spent=356.99
+[251/400] embedded q[566, 586] off_topic/clean turns=18 spent=357.16
+[252/400] embedded q[586] off_topic/clean turns=12 spent=357.55
+[253/400] frontend q[900002] asks_answer/rambling turns=9 spent=357.68
+[254/400] ai_eng q[501] code_paster/typos turns=10 spent=357.84
+[255/400] backend q[611] off_topic/clean turns=13 spent=358.13
+[256/400] embedded q[584] partial/dictated turns=8 spent=358.21

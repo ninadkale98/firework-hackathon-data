@@ -1,0 +1,7 @@
+/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/data/export/train.jsonl: 8361 lines, 261.0 MB, tasks={'interview': 4471, 'study': 2395, 'assess': 1495}
+/Users/ninad/codepraxis/fullstack_v2/hackathon/fireworks-distill/data/export/val.jsonl: 682 lines, 21.5 MB, tasks={'study': 185, 'interview': 297, 'assess': 200}
+filter: {'ok': 9043, 'format': 104, 'judge': 85, 'leak': 240, 'judge_leak': 97, 'no_move': 8}
+judged by task: {'assess': 1750, 'interview': 5186, 'study': 2641} unjudged: 0
+train: 8361 lines, chars p50=23439 p99=79559 max=95741 (~27355 tokens)
+val: 682 lines, chars p50=25624 p99=89009 max=92268 (~26362 tokens)
+spend (tracked): [('anthropic', 69.94), ('fireworks', 84.42), ('openai', 389.42)]

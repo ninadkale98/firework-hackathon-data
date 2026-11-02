@@ -1,0 +1,3 @@
+gpt-oss-120b: {'ok': 706, 'cached': 819}
+deepseek-v4.1-flash: {'ok': 636, 'cached': 889}
+spend: {'anthropic': 69.94, 'openai': 120.82, 'fireworks': 38.47}

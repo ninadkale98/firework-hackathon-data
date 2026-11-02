@@ -1,0 +1,23 @@
+329 records x 3 models
+  gpt-oss-120b: 50/329 errors=0
+  gpt-5.4: 50/329 errors=0
+  gpt-oss-120b: 100/329 errors=0
+  gpt-oss-120b: 150/329 errors=0
+  gpt-oss-120b: 200/329 errors=0
+  gpt-5.4: 100/329 errors=0
+  deepseek-v4.1-flash: 50/329 errors=0
+  gpt-oss-120b: 250/329 errors=0
+  gpt-5.4: 150/329 errors=0
+  gpt-oss-120b: 300/329 errors=0
+gpt-oss-120b: {'ok': 329, 'error': 9}
+  gpt-5.4: 200/329 errors=0
+  deepseek-v4.1-flash: 100/329 errors=0
+  gpt-5.4: 250/329 errors=0
+  gpt-5.4: 300/329 errors=0
+gpt-5.4: {'ok': 329}
+  deepseek-v4.1-flash: 150/329 errors=0
+  deepseek-v4.1-flash: 200/329 errors=0
+  deepseek-v4.1-flash: 250/329 errors=0
+  deepseek-v4.1-flash: 300/329 errors=0
+deepseek-v4.1-flash: {'ok': 329}
+spend: {'anthropic': 24.71, 'openai': 10.27, 'fireworks': 1.92}

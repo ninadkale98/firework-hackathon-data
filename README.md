@@ -1,0 +1,61 @@
+# firework-hackathon-data (private)
+
+The data behind [firework-hackathon](https://github.com/ninadkale98/firework-hackathon). It is private because it contains CodePraxis interview questions with their answer keys, rubrics and withheld parts. **Never make this repository public.**
+
+## What is here
+
+| Path | What | Unpacked size |
+|---|---|---|
+| `data/distill.db.zst` | SQLite database (WAL checkpointed via `VACUUM INTO`). It holds every record:<br>• the frozen test set: 1,525 turns, Opus as reference;<br>• the training set: 9,577 turns, DeepSeek V4.1 Flash as teacher;<br>• every model's outputs (`runs`);<br>• every score and judge verdict (`scores`);<br>• the spend log | 675 MB |
+| `data/export/train.jsonl.zst`, `val.jsonl.zst` | Fireworks SFT files: 8,361 + 682 lines, filtered by the GPT-5.4 judge | 261 MB + 22 MB |
+| `data/bank.tar.zst` | the local question bank: 45 production rows + entities, plus the entity blobs | 21 MB |
+| `data/board_site.json`, `coverage_*.html` | leaderboard aggregates, coverage reports | small |
+| `questions/` | the production templates and the 4 new local questions (`new-fe-1..3`, `new-be-1`), with their generators | small |
+| `PLAN.md` | the full plan and every decision made | |
+| `logs/` | generation, judging and overnight logs | |
+
+## Restore on a new machine
+
+```bash
+# 1. Code: the public repo, plus the private CodePraxis backend at the commit the data was made with
+git clone https://github.com/ninadkale98/firework-hackathon.git fireworks-distill
+git clone https://github.com/codepraxis-org/backend.git
+(cd backend && git checkout ccee1c5 && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt \
+   && .venv/bin/pip install jsonschema zstandard)
+
+# 2. Data: this repo, unpacked into the code folder
+git clone https://github.com/ninadkale98/firework-hackathon-data.git
+cd fireworks-distill
+mkdir -p data/export
+zstd -d ../firework-hackathon-data/data/distill.db.zst -o data/distill.db
+zstd -d ../firework-hackathon-data/data/export/train.jsonl.zst -o data/export/train.jsonl
+zstd -d ../firework-hackathon-data/data/export/val.jsonl.zst -o data/export/val.jsonl
+zstd -dc ../firework-hackathon-data/data/bank.tar.zst | tar -xf -        # -> data/bank/
+cp ../firework-hackathon-data/data/*.json ../firework-hackathon-data/data/*.html data/
+cp -R ../firework-hackathon-data/questions ../firework-hackathon-data/PLAN.md .
+
+# 3. Keys (never committed): create .env in this folder
+cat > .env <<'EOF'
+FIREWORKS_API_KEY=...
+DISTILL_OPENAI_API_KEY=...
+EOF
+# Claude runs use ANTHROPIC_API_KEY from ../backend/.env (or export it)
+
+# 4. firectl (Fireworks CLI)
+mkdir -p bin && curl -sS https://storage.googleapis.com/fireworks-public/firectl/stable/darwin-arm64.gz -o bin/firectl.gz \
+  && gzip -df bin/firectl.gz && chmod +x bin/firectl
+# bin/fw is in the code repo's .gitignore: recreate it (it adds --api-key from .env):
+printf '#!/bin/sh\nDIR="$(cd "$(dirname "$0")/.." && pwd)"\nKEY="$(grep "^FIREWORKS_API_KEY=" "$DIR/.env" | cut -d= -f2-)"\nexec "$DIR/bin/firectl" --api-key "$KEY" "$@"\n' > bin/fw && chmod +x bin/fw
+
+# 5. Check
+PYTHONPATH=../backend:. ../backend/.venv/bin/python -m distill.coverage --split test
+```
+
+The code repo's paths assume `backend/` sits two levels above `fireworks-distill/` (`../../backend`). Either keep that layout (`fullstack_v2/backend` and `fullstack_v2/hackathon/fireworks-distill`), or set `PYTHONPATH` to wherever the backend lives.
+
+## Where things stand (2026-11-02, morning)
+
+- Baseline and leaderboard: done, see the public repo's `EVALUATION.md` and its GitHub Pages site.
+- Training data: done (`data/export/`).
+- **Next:** upload to Fireworks (dataset uploads were disabled on the account: ask Fireworks staff to enable them, or use the Serverless Training API through the `fireworks-training` plugin), then LoRA SFT on Qwen3.5-9B, deploy, and evaluate on the same frozen test set. The steps are in the public repo's `MORNING.md`.
+- OpenAI credit ran out after the overnight filter, so top it up before the evaluation judge runs.

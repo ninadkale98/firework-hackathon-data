@@ -1,0 +1,272 @@
+{
+  "question": {
+    "name": "Why keyboard and screen-reader users can't use a dialog",
+    "mode": "open-probe",
+    "topics": [
+      "Keyboard accessibility and focus management in modal dialogs",
+      "ARIA roles, states and properties: dialog, combobox and listbox",
+      "Testing accessibility: what automated checks find and what they miss"
+    ],
+    "seniority": "senior",
+    "duration": 12,
+    "status": "draft",
+    "seed_question": "Keyboard and screen-reader users report that they can't use the **Add labels** dialog on the items page. Pressing Enter on a suggestion closes the dialog without adding the label, and when the dialog closes they are sent back to the top of the page. The page is React 19.3 with TypeScript.\n\nAttached: the code, a screen reader's speech log of one tester's sessions (NVDA with Chrome), and two screenshots taken during them.\n\n**What is wrong, for a keyboard user and for a screen-reader user? Point to the code and the log.**",
+    "entity_refs": [
+      {
+        "id": "e1",
+        "run": null,
+        "editable": false
+      },
+      {
+        "id": "e2",
+        "run": null,
+        "editable": false
+      },
+      {
+        "id": "e3",
+        "run": null,
+        "editable": false
+      }
+    ],
+    "mcq_choices": [],
+    "question_prompt": "Senior front-end engineer, 5 to 8 years, React and TypeScript, responsible for the accessibility of shared components. The question follows one dialog with a label search box: what is broken for keyboard and screen-reader users, a teammate's pull request that adds ARIA, a focus trap and tab stops, the candidate's own rewrite of the picker in an editable file, and a proposal to use an automated scan as the accessibility gate. The first probe is the richest (the pull request and the speech log recorded with it: what helps, what is wrong, what is still broken); the last is the hardest (judging the automated gate and planning tests that can back a WCAG 2.2 AA statement). Press for answers grounded in the files. Strong candidates name specific things: the Export focus ring behind the overlay and step 3 of the log; the 40 row check boxes before the search box is reached (the portal at the end of body); the `if (!open) return null` in Modal.tsx removing the focused element, then \"Items document\" and \"Skip to content\" (steps 10 and 11, 15 and 16); the dialog div with no role or name and the span title (browse mode reads \"Add labels\" as plain text, step 24, and the page behind, steps 17 to 19); the close div with an aria-hidden svg; Down Arrow saying \"bu\" (steps 8 and 9) because the active option is only a CSS class; Enter submitting the form with an empty labelIds; `.picker-input:focus { outline: none; }`; the #eef3ff highlight; in the pull request, the trap's querySelectorAll at open, Shift+Tab escaping at step 13, \"bug\", \"build\" with no role, the assertive list cutting itself off, and Enter still submitting at step 19; in the gate, the disabled Add labels button and the inapplicable dialog rules. If an answer names nothing from the files, ask for one line or one step number before moving on. Don't explain focus management, the dialog or combobox patterns, aria-modal, live regions, or what automated tools can check to the candidate.",
+    "answer_key": {
+      "red_flags": [
+        "proposes adding aria-label or tabIndex to elements as the fix, without naming where focus goes or what the keyboard does",
+        "proposes a positive tabIndex to fix the order, or treats the close icon as fine because it has an svg",
+        "says running an automated checker would have caught all of this, or treats a screen reader's silence as a screen-reader bug"
+      ],
+      "required_concepts": [
+        "Focus: opening the dialog doesn't move focus into it, so Tab goes to Export behind the overlay (step 3, the screenshot's focus ring), and nothing keeps focus inside: the dialog is rendered at the end of body, so the keyboard only reaches the search box after Export, Select all and all 40 row check boxes (steps 3 to 6). On close Modal returns null and removes the focused element, so focus falls to body (\"Items document\", then \"Skip to content\" on Tab, steps 10 to 11 and 15 to 16); it is never returned to Add labels.",
+        "Semantics: the dialog is a plain div, with no role=\"dialog\", no aria-modal and no name (the title is a span), so NVDA says nothing when it opens (step 2) and browse mode reads the page behind (steps 17 to 19). The close control is a div with an aria-hidden svg: no role, no name, not focusable, no keyboard.",
+        "The picker: the box is not a combobox (no role, aria-expanded, aria-controls or aria-activedescendant) and the options are divs with no role or aria-selected; the active option is only a CSS class, so Down Arrow says \"bu\" (steps 8 and 9). The input has no Enter handling, so Enter submits the form: the dialog saves with labelIds [] and closes. Escape on the document closes the whole dialog."
+      ],
+      "good_additional_points": [
+        "`.picker-input:focus { outline: none; }` in modal.css removes the focus indicator, so there is no focus ring after step 9",
+        "the active option's #eef3ff background is about 1.1 to 1 against white, and colour is its only marker",
+        "\"0 labels selected\" changes silently: no status message for screen readers",
+        "the search box is named only by its placeholder",
+        "clicking the overlay closes the dialog and loses the choices, with no confirmation",
+        "Modal is shared by 9 dialogs, so fixing it fixes all of them, and breaking it breaks all of them"
+      ]
+    },
+    "probes": [
+      {
+        "id": 1,
+        "next": [
+          {
+            "id": 1,
+            "next": [
+              {
+                "id": 1,
+                "next": [],
+                "hints": [
+                  {
+                    "id": 1,
+                    "text": "What state is the page in when the scan runs? Can the dialog be in it?",
+                    "entities": []
+                  },
+                  {
+                    "id": 2,
+                    "text": "Which steps of the speech logs could any automated scan observe?",
+                    "entities": []
+                  },
+                  {
+                    "id": 3,
+                    "text": "What would a test have to do to catch focus going to the page after Escape?",
+                    "entities": []
+                  }
+                ],
+                "duration": 3,
+                "editable": [],
+                "entities": [
+                  "e7"
+                ],
+                "run": [],
+                "solution": "Not as the gate. The test loads /items and scans it straight away: nothing is selected, so Add labels is disabled and the dialog was never opened; it isn't in the page, which is why aria-dialog-name, aria-required-children and the other dialog and listbox rules are inapplicable. It passes on the original broken code too. The incomplete color-contrast result is ignored because only violations fail the test. Even run with the dialog open, axe checks the page at one moment: whether roles, names and attribute values are present and valid, and some contrast. It cannot check what this bug is about: where focus goes on open, whether Tab and Shift+Tab stay inside, whether focus returns to Add labels on close, whether Enter submits the form, whether Escape closes the list or the whole dialog, what a screen reader announces and when. Automated rules find a minority of WCAG failures. Instead: (1) scan with the dialog open, and again with the list open, and fail on incomplete results that aren't reviewed; (2) keyboard tests in Playwright that assert behaviour: select a row, focus Add labels, press Enter, expect the search box (getByRole('combobox', {name: ...})) toBeFocused; Tab and Shift+Tab cycle within the dialog; type 'bu', ArrowDown, expect aria-activedescendant to point at the option and aria-expanded true; Enter toggles aria-selected and does not send a request; Escape closes the list first, a second Escape closes the dialog and expect the Add labels button toBeFocused; (3) an ARIA snapshot of the open dialog (toMatchAriaSnapshot) so roles and names can't regress; (4) a manual screen-reader pass before the release with NVDA plus Chrome and VoiceOver plus Safari, scripted from the speech logs, and a check at 200% zoom; (5) since Modal serves 9 dialogs, test the shared component once and each dialog's content. Only (2) to (4) let the team state AA honestly for this dialog; the statement should say which tests back it.",
+                "highlights": [],
+                "description": "The team proposes an automated check as the accessibility gate for the dialog. Show a11y-ci-gate.txt. Ask whether they would accept it as the gate, what it does and does not tell them, and what they would put in place instead before the team states whether the dialog meets WCAG 2.2 AA. If they ask how many dialogs use Modal: 9. If they ask which screen readers users have: NVDA and JAWS on Windows with Chrome, VoiceOver on macOS and iOS with Safari. If they ask what the test data looks like: the items page loads 40 rows with nothing selected.",
+                "withheld_solution_parts": [
+                  "never opened",
+                  "keyboard tests",
+                  "manual screen-reader"
+                ]
+              }
+            ],
+            "hints": [
+              {
+                "id": 1,
+                "text": "How does a screen reader know which option is active if focus stays in the box?",
+                "entities": []
+              },
+              {
+                "id": 2,
+                "text": "The box is inside a form. What does Enter do there by default?",
+                "entities": []
+              },
+              {
+                "id": 3,
+                "text": "Two parts of the page listen for Escape. Which one should win when the list is open?",
+                "entities": []
+              }
+            ],
+            "duration": 2,
+            "editable": [
+              "e6"
+            ],
+            "entities": [
+              "e6"
+            ],
+            "run": [],
+            "solution": "A good version follows the combobox pattern with a listbox and keeps DOM focus on the input. The input gets role=\"combobox\", aria-expanded (true when the list shows), aria-controls pointing at the list's id, aria-autocomplete=\"list\", a real accessible name (a <label> or aria-labelledby, not only the placeholder), and aria-activedescendant set to the active option's id (or removed when the list is closed or empty). The list gets role=\"listbox\" with an id and aria-multiselectable=\"true\"; each option gets role=\"option\", a stable id and aria-selected reflecting `selected.includes(l.id)`; the check mark can stay as decoration. onKeyDown: ArrowDown and ArrowUp move `active` (and open the list); Enter calls e.preventDefault() so the form is not submitted, then toggles the active option if there is one; Escape, when the list is open, closes the list and calls e.stopPropagation() (and the Modal's listener must respect that, or listen on the dialog rather than the document) so the dialog stays open; a second Escape closes the dialog. `active` is reset or clamped when matches change. Options keep onClick, with onMouseDown preventDefault so a click doesn't take focus out of the input. The active option has a visible style beyond a pale background (an outline or border, 3:1 against its neighbours), and the input gets its focus outline back. Optional: a polite status such as \"3 labels found\" after typing pauses. Weak versions: tabIndex on each option, an assertive live region on the list, or roles added with no keyboard handling.",
+            "highlights": [],
+            "description": "Show LabelPicker.tsx, a copy of the picker before the pull request, which they can edit. Ask them to change it so a keyboard user and a screen-reader user can search and choose labels, then walk through their version. Then ask about their code only, one question at a time, choosing what their version leaves open: what a screen reader says when they press Down Arrow; what Enter does when nothing matches, and when an option is active; what Escape does when the list is open; where focus is while they move through the options; how a mouse click on an option affects focus. Ask them to attach the lines they mean.",
+            "withheld_solution_parts": [
+              "aria-activedescendant",
+              "preventDefault",
+              "stopPropagation"
+            ]
+          }
+        ],
+        "hints": [
+          {
+            "id": 1,
+            "text": "Which elements does the focus trap know about, and when does it find them?",
+            "entities": []
+          },
+          {
+            "id": 2,
+            "text": "In the new log, how many Tab presses does it take to get through three labels, and what does NVDA say for each?",
+            "entities": []
+          },
+          {
+            "id": 3,
+            "text": "Which complaints from the opening question still happen in the new log?",
+            "entities": []
+          }
+        ],
+        "duration": 3,
+        "editable": [],
+        "entities": [
+          "e4",
+          "e5"
+        ],
+        "run": [],
+        "solution": "Approve the role, aria-modal and name (step 2 now says \"Add labels dialog\") and moving focus into the dialog. Reject the rest. The focus trap's list is computed once, when the dialog opens, from \"button, input\": it never sees the options added later, it only handles Tab on the last element, and it ignores Shift+Tab, so Shift+Tab from the search box leaves the dialog (step 13, Select row 40). aria-modal tells assistive technology the rest is inert but doesn't make it so; the page behind is still focusable and reachable in browse mode. The close control is still a div: aria-label on a div with no role is not reliably announced, and it still can't be reached or pressed with the keyboard. It must be a <button type=\"button\" aria-label=\"Close\">. tabIndex={0} on every option turns one control into a Tab stop per label (steps 6 to 9), and NVDA announces no role or state (\"bug\", \"build\"): no \"option\", no \"selected\". The pattern is a single tab stop: focus stays in the box, arrows move an active option announced through aria-activedescendant. aria-live=\"assertive\" on the whole list reads every match on every key press and cuts itself off (steps 3 and 4); a polite count is enough. Still broken: Enter in the search box submits the form and saves nothing (steps 17 to 19); Escape closes the whole dialog; focus is not returned to Add labels on close (step 15, then Skip to content); the focus outline is still removed. Ask for: the native <dialog> element opened with showModal(): it puts the dialog in the top layer, makes the rest of the page inert (no hand-made trap), handles Escape through the cancel event, and focuses the first focusable element; plus, on close, focus back on the Add labels button explicitly; or the inert attribute on the app root if Modal must stay a div. Then the combobox pattern in the picker.",
+        "highlights": [],
+        "description": "A teammate opened a pull request to fix the dialog. Show the diff and the speech log recorded on staging with it applied. Ask them to review it as they would on the team: what each change does for a keyboard user and a screen-reader user, what they would approve or reject, and what they would ask for instead. If they ask how it was tested: with the keyboard in Chrome, and axe reported no violations. If they ask which browsers must be supported: current Chrome, Edge, Firefox and Safari.",
+        "withheld_solution_parts": [
+          "computed once",
+          "single tab stop",
+          "top layer"
+        ]
+      }
+    ],
+    "seed_hints": [
+      {
+        "id": 1,
+        "text": "After step 2, where is keyboard focus? Look at step 3 and the left screenshot.",
+        "entities": []
+      },
+      {
+        "id": 2,
+        "text": "What happens to the focused element when Modal returns null?",
+        "entities": []
+      },
+      {
+        "id": 3,
+        "text": "When the tester presses Down Arrow, how would NVDA know which label is highlighted?",
+        "entities": []
+      }
+    ],
+    "withheld_solution_parts": [
+      "focus falls to body",
+      "aria-activedescendant",
+      "Enter submits the form"
+    ],
+    "max_probes": 3,
+    "seed_duration": 4,
+    "description_sections": {
+      "task": "A web app has a small window (a dialog) for adding labels to items, with a search box that suggests labels. People who use only a keyboard, or a screen reader (software that reads the screen aloud), can't use it: pressing Enter closes the window without adding the label, and they lose their place on the page. The candidate works out what is wrong from the code and a record of what the screen reader said, reviews a colleague's fix, rewrites the search box, and judges a plan to check accessibility automatically.",
+      "signal": "Does this person know how keyboard focus and screen-reader announcements actually work in a dialog, beyond adding attributes?",
+      "audience": "Senior front-end engineers (5 to 8 years) who build shared React components. Knowing the WCAG accessibility guidelines, ARIA (the attributes that describe a page to screen readers), and how to test with a screen reader helps.",
+      "implement": "1. Explains what is broken for keyboard users and screen-reader users, pointing to the code and the screen reader's log. *(4 min)*\n2. Reviews a colleague's fix and a new screen-reader log recorded with it: what helps, what is wrong, what is still broken. *(3 min)*\n3. Rewrites the label search box so keyboard and screen-reader users can use it, then explains it. *(2 min)*\n4. Judges a plan to use one automated check as the team's accessibility gate, and says what testing they would do instead. *(3 min)*",
+      "starting_state": "- The dialog's code (a small code folder)\n- A record of what the screen reader said, key by key, during a tester's sessions\n- Two screenshots of the dialog taken during those sessions\n- Later: a colleague's code change with a new screen-reader record, a copy of the search box code they can edit, and the automated accessibility test the team proposes"
+    },
+    "seed_highlights": []
+  },
+  "entities": [
+    {
+      "id": "e1",
+      "type": "repo",
+      "source": "author",
+      "meta": {
+        "files": 9,
+        "filename": "items-labels",
+        "text_bytes": 7721
+      },
+      "normalized_form": "Repository, 9 files:\n  README.md\n  src/components/Modal.tsx\n  src/labels/AddLabelsDialog.tsx\n  src/labels/LabelPicker.tsx\n  src/labels/api.ts\n  src/labels/labels.ts\n  src/labels/types.ts\n  src/pages/ItemsPage.tsx\n  src/styles/modal.css\n\n--- README.md ---\n# items page: add labels\n\nUsers select rows on the items page and press **Add labels** to open a dialog.\nIn the dialog they search the labels, pick one or more, and press **Save**.\n\n- `Modal` is the app's shared dialog component (used by 9 dialogs).\n- `LabelPicker` is the search box with its list of matching labels.\n- The team's target is WCAG 2.2 level AA for every page.\n\nReact 19.3, TypeScript 7.0, Vite. End-to-end tests use Playwright.\n\n--- src/components/Modal.tsx ---\nimport { useEffect, type ReactNode } from \"react\";\nimport { createPortal } from \"react-dom\";\n\ninterface ModalProps {\n  open: boolean;\n  title: string;\n  onClose: () => void;\n  children: ReactNode;\n}\n\nexport function Modal({ open, title, onClose, children }: ModalProps) {\n  useEffect(() => {\n    if (!open) return;\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key === \"Escape\") onClose();\n    };\n    document.addEventListener(\"keydown\", onKey);\n    return () => document.removeEventListener(\"keydown\", onKey);\n  }, [open, onClose]);\n\n  if (!open) return null;\n\n  return createPortal(\n    <div className=\"overlay\" onClick={onClose}>\n      <div className=\"modal\" onClick={(e) => e.stopPropagation()}>\n        <div className=\"modal-header\">\n          <span className=\"modal-title\">{title}</span>\n          <div className=\"icon-button\" onClick={onClose}>\n            <svg aria-hidden=\"true\" viewBox=\"0 0 16 16\">\n              <path d=\"M3 3l10 10M13 3L3 13\" />\n            </svg>\n          </div>\n        </div>\n        {children}\n      </div>\n    </div>,\n    document.body,\n  );\n}\n\n--- src/labels/AddLabelsDialog.tsx ---\nimport { useState, type FormEvent } from \"react\";\nimport { Modal } from \"../components/Modal\";\nimport { LabelPicker } from \"./LabelPicker\";\nimport { saveLabels } from \"./api\";\nimport { ALL_LABELS } from \"./labels\";\n\ninterface AddLabelsDialogProps {\n  open: boolean;\n  itemIds: string[];\n  onClose: () => void;\n}\n\nexport function AddLabelsDialog({ open, itemIds, onClose }: AddLabelsDialogProps) {\n  const [chosen, setChosen] = useState<string[]>([]);\n\n  const toggle = (id: string) =>\n    setChosen((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));\n\n  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {\n    e.preventDefault();\n    await saveLabels(itemIds, chosen);\n    setChosen([]);\n    onClose();\n  };\n\n  return (\n    <Modal open={open} title=\"Add labels\" onClose={onClose}>\n      <form onSubmit={handleSubmit}>\n        <LabelPicker labels={ALL_LABELS} selected={chosen} onToggle={toggle} />\n        <p className=\"hint\">{chosen.length} labels selected</p>\n        <div className=\"actions\">\n          <button type=\"button\" onClick={onClose}>\n            Cancel\n          </button>\n          <button type=\"submit\">Save</button>\n        </div>\n      </form>\n    </Modal>\n  );\n}\n\n--- src/labels/LabelPicker.tsx ---\nimport { useState } from \"react\";\nimport type { Label } from \"./types\";\n\ninterface LabelPickerProps {\n  labels: Label[];\n  selected: string[];\n  onToggle: (id: string) => void;\n}\n\nexport function LabelPicker({ labels, selected, onToggle }: LabelPickerProps) {\n  const [text, setText] = useState(\"\");\n  const [active, setActive] = useState(0);\n  const matches = labels.filter((l) => l.name.toLowerCase().includes(text.toLowerCase()));\n\n  return (\n    <div className=\"picker\">\n      <input\n        className=\"picker-input\"\n        placeholder=\"Search labels\"\n        value={text}\n        onChange={(e) => {\n          setText(e.target.value);\n          setActive(0);\n        }}\n        onKeyDown={(e) => {\n          if (e.key === \"ArrowDown\") setActive((i) => Math.min(i + 1, matches.length - 1));\n          if (e.key === \"ArrowUp\") setActive((i) => Math.max(i - 1, 0));\n        }}\n      />\n      {text && (\n        <div className=\"picker-list\">\n          {matches.map((l, i) => (\n            <div\n              key={l.id}\n              className={i === active ? \"option active\" : \"option\"}\n              onClick={() => onToggle(l.id)}\n            >\n              <span className=\"swatch\" style={{ background: l.color }} />\n              {l.name}\n              {selected.includes(l.id) && <span className=\"check\">✓</span>}\n            </div>\n          ))}\n        </div>\n      )}\n    </div>\n  );\n}\n\n--- src/labels/api.ts ---\nexport async function saveLabels(itemIds: string[], labelIds: string[]): Promise<void> {\n  const res = await fetch(\"/api/items/labels\", {\n    method: \"POST\",\n    headers: { \"Content-Type\": \"application/json\" },\n    body: JSON.stringify({ itemIds, labelIds }),\n  });\n  if (!res.ok) throw new Error(`save failed: ${res.status}`);\n}\n\n--- src/labels/labels.ts ---\nimport type { Label } from \"./types\";\n\nexport const ALL_LABELS: Label[] = [\n  { id: \"l1\", name: \"bug\", color: \"#d73a4a\" },\n  { id: \"l2\", name: \"build\", color: \"#5319e7\" },\n  { id: \"l3\", name: \"budget\", color: \"#fbca04\" },\n  { id: \"l4\", name: \"blocked\", color: \"#b60205\" },\n  { id: \"l5\", name: \"backend\", color: \"#0e8a16\" },\n  { id: \"l6\", name: \"database\", color: \"#1d76db\" },\n  { id: \"l7\", name: \"design\", color: \"#c5def5\" },\n  { id: \"l8\", name: \"docs\", color: \"#0075ca\" },\n  { id: \"l9\", name: \"frontend\", color: \"#e99695\" },\n  { id: \"l10\", name: \"security\", color: \"#ee0701\" },\n];\n\n--- src/labels/types.ts ---\nexport interface Label {\n  id: string;\n  name: string;\n  color: string;\n}\n\nexport interface Item {\n  id: string;\n  title: string;\n  labels: string[];\n}\n\n--- src/pages/ItemsPage.tsx ---\nimport { useState } from \"react\";\nimport { AddLabelsDialog } from \"../labels/AddLabelsDialog\";\nimport type { Item } from \"../labels/types\";\n\nexport function ItemsPage({ items }: { items: Item[] }) {\n  const [selected, setSelected] = useState<string[]>([]);\n  const [dialogOpen, setDialogOpen] = useState(false);\n\n  const toggleRow = (id: string) =>\n    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));\n\n  return (\n    <>\n      <a href=\"#main\" className=\"skip-link\">\n        Skip to content\n      </a>\n      <header className=\"toolbar\">\n        <button onClick={() => setDialogOpen(true)} disabled={selected.length === 0}>\n          Add labels\n        </button>\n        <button>Export</button>\n      </header>\n      <main id=\"main\">\n        <h1>Items</h1>\n        <table>\n          <thead>\n            <tr>\n              <th>\n                <input\n                  type=\"checkbox\"\n                  aria-label=\"Select all\"\n                  checked={selected.length === items.length}\n                  onChange={(e) => setSelected(e.target.checked ? items.map((i) => i.id) : [])}\n                />\n              </th>\n              <th>Title</th>\n              <th>Labels</th>\n            </tr>\n          </thead>\n          <tbody>\n            {items.map((item, i) => (\n              <tr key={item.id}>\n                <td>\n                  <input\n                    type=\"checkbox\"\n                    aria-label={`Select row ${i + 1}`}\n                    checked={selected.includes(item.id)}\n                    onChange={() => toggleRow(item.id)}\n                  />\n                </td>\n                <td>{item.title}</td>\n                <td>{item.labels.join(\", \")}</td>\n              </tr>\n            ))}\n          </tbody>\n        </table>\n      </main>\n      <AddLabelsDialog open={dialogOpen} itemIds={selected} onClose={() => setDialogOpen(false)} />\n    </>\n  );\n}\n\n--- src/styles/modal.css ---\n.overlay {\n  position: fixed;\n  inset: 0;\n  background: rgba(0, 0, 0, 0.45);\n  display: grid;\n  place-items: center;\n}\n\n.modal {\n  background: #fff;\n  border-radius: 8px;\n  width: 420px;\n  padding: 16px;\n}\n\n.icon-button {\n  cursor: pointer;\n  width: 24px;\n  height: 24px;\n}\n\n.picker-input {\n  width: 100%;\n  padding: 6px 8px;\n  border: 1px solid #c9ced6;\n}\n\n.picker-input:focus {\n  outline: none;\n}\n\n.option {\n  display: flex;\n  gap: 8px;\n  padding: 4px 8px;\n  cursor: pointer;\n}\n\n.option.active {\n  background: #eef3ff;\n}\n\n.option .check {\n  margin-left: auto;\n  color: #2f6fed;\n}\n"
+    },
+    {
+      "id": "e2",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 38,
+        "filename": "screen-reader-log.txt"
+      },
+      "normalized_form": "NVDA 2026.2 speech viewer, Chrome 142, Windows 11. Items page with 40 rows; rows 1 and 2 are\nalready selected, so \"Add labels\" is enabled. Each line: the keys pressed, then what NVDA said.\n\"(nothing)\" means NVDA said nothing. NVDA was in focus mode unless the line says browse mode.\n\nSession 1: keyboard only\n 1  [Tab]                     Add labels  button\n 2  [Enter]                   (nothing)                       the dialog appears on screen\n 3  [Tab]                     Export  button\n 4  [Tab]                     Select all  check box  not checked\n 5  [Tab] x40                 Select row 1  check box  checked ... Select row 40  check box  not checked\n                              (40 announcements, shortened here)\n 6  [Tab]                     Search labels  edit  blank\n 7  [b] [u]                   b  u\n 8  [Down Arrow]              bu\n 9  [Down Arrow]              bu\n10  [Enter]                   Items  document                 the dialog has closed\n11  [Tab]                     Skip to content  link\n\nSession 2: mouse, then keyboard\n12  mouse: Add labels, then a click in the dialog's search box\n                              Search labels  edit  blank\n13  [b] [u]                   b  u\n14  mouse: click on \"bug\"     (nothing)                       a check mark appears next to \"bug\"\n15  [Escape]                  Items  document                 the dialog has closed\n16  [Tab]                     Skip to content  link\n\nSession 3: browse mode (NVDA's reading cursor), dialog open\n17  [Ctrl+Home]               Skip to content  link\n18  [H]                       Items  heading  level 1\n19  [H]                       no next heading\n20  [Ctrl+End]                Save  button\n21  [Up Arrow]                Cancel  button\n22  [Up Arrow]                0 labels selected\n23  [Up Arrow]                Search labels  edit  blank\n24  [Up Arrow]                Add labels\n\nNetwork, same sessions: step 10 sent POST /api/items/labels with {\"itemIds\":[\"i1\",\"i2\"],\"labelIds\":[]}.\nStep 15 sent nothing.\n"
+    },
+    {
+      "id": "e3",
+      "type": "image",
+      "source": "author",
+      "meta": {
+        "filename": "dialog-screenshots.png",
+        "content_type": "image/png",
+        "normalized_by": "author"
+      },
+      "normalized_form": "Two screenshots side by side, taken during session 1 of the speech log (desktop Chrome, 100% zoom).\n\n**Left, after step 3:** the items page is dimmed by a dark overlay. A white dialog is centred on top of it. Behind the overlay, in the toolbar at the top of the page, the \"Export\" button has a thick blue focus ring; it is the only focus ring on screen. The dialog shows, top left, the text \"Add labels\" in bold; top right, an \"×\" icon; below, an empty search box with the grey placeholder \"Search labels\"; under it \"0 labels selected\"; at the bottom right two buttons, \"Cancel\" and \"Save\" (Save is blue).\n\n**Right, after step 9:** the same dialog. The search box contains \"bu\". The box has a thin grey border, the same as when it is not focused; there is no focus ring anywhere on screen. Under the box a list of three rows, each with a small coloured square and a name: \"bug\" (red square), \"build\" (purple square), \"budget\" (yellow square). The \"budget\" row has a very light blue background (#eef3ff on the white dialog); the other rows are white. Nothing else marks it.\n\n(For the interviewer: #eef3ff against white is a contrast ratio of about 1.11 to 1.)\n"
+    },
+    {
+      "id": "e4",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 80,
+        "filename": "pr-dialog-a11y.diff"
+      },
+      "normalized_form": "Pull request: \"Make the Add labels dialog accessible\"\n\nDescription: The dialog now has role=\"dialog\" and aria-modal, moves focus into\nitself when it opens and keeps Tab inside. The close icon has a label. Labels in\nthe list can be reached with Tab and chosen with Enter, and the list is a live\nregion so screen readers hear the matches. axe: 0 violations.\n\nChecks: typecheck passed; e2e/a11y.spec.ts passed.\n\ndiff --git a/src/components/Modal.tsx b/src/components/Modal.tsx\n--- a/src/components/Modal.tsx\n+++ b/src/components/Modal.tsx\n@@ -1,4 +1,4 @@\n-import { useEffect, type ReactNode } from \"react\";\n+import { useEffect, useRef, type ReactNode } from \"react\";\n import { createPortal } from \"react-dom\";\n \n interface ModalProps {\n@@ -9,10 +9,20 @@\n }\n \n export function Modal({ open, title, onClose, children }: ModalProps) {\n+  const dialogRef = useRef<HTMLDivElement>(null);\n+\n   useEffect(() => {\n     if (!open) return;\n+    const dialog = dialogRef.current!;\n+    const focusable = dialog.querySelectorAll<HTMLElement>(\"button, input\");\n+    focusable[0]?.focus();\n     const onKey = (e: KeyboardEvent) => {\n       if (e.key === \"Escape\") onClose();\n+      // Keep Tab inside the dialog.\n+      if (e.key === \"Tab\" && document.activeElement === focusable[focusable.length - 1]) {\n+        e.preventDefault();\n+        focusable[0].focus();\n+      }\n     };\n     document.addEventListener(\"keydown\", onKey);\n     return () => document.removeEventListener(\"keydown\", onKey);\n@@ -22,10 +32,17 @@\n \n   return createPortal(\n     <div className=\"overlay\" onClick={onClose}>\n-      <div className=\"modal\" onClick={(e) => e.stopPropagation()}>\n+      <div\n+        ref={dialogRef}\n+        className=\"modal\"\n+        role=\"dialog\"\n+        aria-modal=\"true\"\n+        aria-label={title}\n+        onClick={(e) => e.stopPropagation()}\n+      >\n         <div className=\"modal-header\">\n           <span className=\"modal-title\">{title}</span>\n-          <div className=\"icon-button\" onClick={onClose}>\n+          <div className=\"icon-button\" aria-label=\"Close\" onClick={onClose}>\n             <svg aria-hidden=\"true\" viewBox=\"0 0 16 16\">\n               <path d=\"M3 3l10 10M13 3L3 13\" />\n             </svg>\ndiff --git a/src/labels/LabelPicker.tsx b/src/labels/LabelPicker.tsx\n--- a/src/labels/LabelPicker.tsx\n+++ b/src/labels/LabelPicker.tsx\n@@ -28,12 +28,16 @@\n         }}\n       />\n       {text && (\n-        <div className=\"picker-list\">\n+        <div className=\"picker-list\" aria-live=\"assertive\">\n           {matches.map((l, i) => (\n             <div\n               key={l.id}\n+              tabIndex={0}\n               className={i === active ? \"option active\" : \"option\"}\n               onClick={() => onToggle(l.id)}\n+              onKeyDown={(e) => {\n+                if (e.key === \"Enter\") onToggle(l.id);\n+              }}\n             >\n               <span className=\"swatch\" style={{ background: l.color }} />\n               {l.name}\n"
+    },
+    {
+      "id": "e5",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 29,
+        "filename": "screen-reader-log-after-pr.txt"
+      },
+      "normalized_form": "NVDA 2026.2 speech viewer, Chrome 142, Windows 11, staging with the pull request applied.\nItems page with 40 rows; rows 1 and 2 selected. Each line: the keys pressed, then what NVDA said.\nNVDA was in focus mode.\n\nSession 1: keyboard only\n 1  [Tab]                     Add labels  button\n 2  [Enter]                   Add labels  dialog   Search labels  edit  blank\n 3  [b]                       b  bug  build  budget  blocked  backend  database\n 4  [u]                       bug  build  budget             (cut in while the previous list was being read)\n 5  [Down Arrow]              bu\n 6  [Tab]                     bug\n 7  [Tab]                     build\n 8  [Enter]                   (nothing)                       a check mark appears next to \"build\"\n 9  [Tab]                     budget\n10  [Tab]                     Cancel  button\n11  [Tab]                     Save  button\n12  [Tab]                     Search labels  edit  bu\n13  [Shift+Tab]               Select row 40  check box  not checked\n14  [Tab]                     Search labels  edit  bu\n15  [Escape]                  Items  document                 the dialog has closed\n16  [Tab]                     Skip to content  link\n\nSession 2: keyboard only\n17  [Tab] [Enter]             Add labels  button   Add labels  dialog   Search labels  edit  blank\n18  [d] [o]                   d  docs  o  docs\n19  [Enter]                   Items  document                 the dialog has closed\n\nNetwork, same sessions: step 15 sent nothing. Step 19 sent POST /api/items/labels with\n{\"itemIds\":[\"i1\",\"i2\"],\"labelIds\":[]}.\n"
+    },
+    {
+      "id": "e6",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 47,
+        "filename": "LabelPicker.tsx"
+      },
+      "normalized_form": "import { useState } from \"react\";\nimport type { Label } from \"./types\";\n\ninterface LabelPickerProps {\n  labels: Label[];\n  selected: string[];\n  onToggle: (id: string) => void;\n}\n\nexport function LabelPicker({ labels, selected, onToggle }: LabelPickerProps) {\n  const [text, setText] = useState(\"\");\n  const [active, setActive] = useState(0);\n  const matches = labels.filter((l) => l.name.toLowerCase().includes(text.toLowerCase()));\n\n  return (\n    <div className=\"picker\">\n      <input\n        className=\"picker-input\"\n        placeholder=\"Search labels\"\n        value={text}\n        onChange={(e) => {\n          setText(e.target.value);\n          setActive(0);\n        }}\n        onKeyDown={(e) => {\n          if (e.key === \"ArrowDown\") setActive((i) => Math.min(i + 1, matches.length - 1));\n          if (e.key === \"ArrowUp\") setActive((i) => Math.max(i - 1, 0));\n        }}\n      />\n      {text && (\n        <div className=\"picker-list\">\n          {matches.map((l, i) => (\n            <div\n              key={l.id}\n              className={i === active ? \"option active\" : \"option\"}\n              onClick={() => onToggle(l.id)}\n            >\n              <span className=\"swatch\" style={{ background: l.color }} />\n              {l.name}\n              {selected.includes(l.id) && <span className=\"check\">✓</span>}\n            </div>\n          ))}\n        </div>\n      )}\n    </div>\n  );\n}\n"
+    },
+    {
+      "id": "e7",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 28,
+        "filename": "a11y-ci-gate.txt"
+      },
+      "normalized_form": "Proposal from the team: make this test the accessibility gate for the dialog in CI.\nWhen it passes, the dialog can ship. The team must state at the release in two weeks\nwhether the dialog meets WCAG 2.2 level AA.\n\n// e2e/a11y.spec.ts\nimport { test, expect } from \"@playwright/test\";\nimport AxeBuilder from \"@axe-core/playwright\";\n\ntest(\"items page has no accessibility violations\", async ({ page }) => {\n  await page.goto(\"/items\");\n  const results = await new AxeBuilder({ page })\n    .withTags([\"wcag2a\", \"wcag2aa\", \"wcag21aa\", \"wcag22aa\"])\n    .analyze();\n  expect(results.violations).toEqual([]);\n});\n\n$ npx playwright test e2e/a11y.spec.ts --reporter=list\nRunning 1 test using 1 worker\n  ✓  1 [chromium] › e2e/a11y.spec.ts:4:1 › items page has no accessibility violations (2.1s)\n  1 passed (3.4s)\n\nSummary from the same run (results.json, @axe-core/playwright 4.11):\n  url:           http://localhost:4173/items\n  violations:    0\n  passes:        23 rules\n  incomplete:    1 rule   color-contrast: 2 elements need review\n  inapplicable:  64 rules, among them aria-dialog-name, aria-required-children,\n                 aria-required-parent, aria-valid-attr-value, nested-interactive\n"
+    }
+  ]
+}

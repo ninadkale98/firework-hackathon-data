@@ -1,0 +1,264 @@
+{
+  "question": {
+    "name": "How one order's card was charged twice",
+    "mode": "open-probe",
+    "topics": [
+      "Idempotency and safe retries for a payment endpoint",
+      "Transactions and check-then-act races in a web API (PostgreSQL, SQLAlchemy)",
+      "Timeouts, connection pools and queues under a slow dependency"
+    ],
+    "seniority": "senior",
+    "duration": 12,
+    "status": "draft",
+    "seed_question": "Yesterday between 14:05 and 14:58, **41 orders** were charged two or three times on the customer's card. During that hour the card payment provider was slow. The checkout's Pay button calls one endpoint in a Python web API (FastAPI, SQLAlchemy, PostgreSQL), which runs as four instances behind a load balancer.\n\nAttached: the service's code, a diagram of the request path with its timeouts, and the logs for one affected order, 88213.\n\n**How did order 88213 get charged twice? Walk through the timeline and point to the code.**",
+    "entity_refs": [
+      {
+        "id": "e1",
+        "run": null,
+        "editable": false
+      },
+      {
+        "id": "e2",
+        "run": null,
+        "editable": false
+      },
+      {
+        "id": "e3",
+        "run": null,
+        "editable": false
+      }
+    ],
+    "mcq_choices": [],
+    "question_prompt": "Senior backend engineer, 5 to 8 years, who builds web APIs that take money. The question follows one pay endpoint that calls a card provider inside a request-long database transaction: how one order was charged twice when the provider was slow, a teammate's idempotency-key pull request, a dashboard of the hour showing the connection pools exhausted, and a proposal to move charging to a queue worker. The first probe is the richest (the pull request: the key made per attempt, the key stored after the charge, the 409, the TTL, the provider left without a key); the last is the hardest (judging a queue design whose visibility timeout is shorter than its provider timeout and whose enqueue is outside the transaction). Press for answers grounded in the files. Strong candidates name specific things: the 504 at 10.001 s from the load balancer while api-2 kept going and charged at 11.771 s; checkout.js retrying any 5xx at once; api-4's status_read=pending at 14:22:13.8 while api-2 was still in the provider call; `if order.status == \"paid\"` then the charge with nothing in between that stops a second request; create_charge called without the idempotency_key it accepts; the orders row ending with ch_3PqB27 while the browser was told ch_3PqB27 and both charges exist; the payments created_at values equal to the transaction start times (14:22:03.122, 14:22:13.789), which show the transaction spanned the provider call; the 7.38 s pool wait on api-1; no unique constraint on payments.order_id; the 41 orders in the SQL result. In later stages: crypto.randomUUID() inside the loop, redis.set after the charge, 36 connections idle in transaction, 4.7 vs 2.0 requests per second, the 30 s visibility timeout against the 35 s provider timeout. If an answer names nothing from the files, ask for one line or one number before moving on. If they ask what isolation level PostgreSQL uses: the default, read committed. If they ask whether the customer pressed Pay more than once: no, one press; the three requests are checkout.js. Don't explain idempotency keys, check-then-act races, isolation levels, connection pooling or at-least-once delivery to the candidate.",
+    "answer_key": {
+      "red_flags": [
+        "proposes disabling the Pay button after one press as the fix, though the log shows one press and three requests from checkout.js",
+        "proposes raising the load balancer timeout as the fix, or blames the provider for creating the second charge",
+        "says 'wrap it in a transaction' though the handler already runs in one, without seeing that the second request read the row before the first committed"
+      ],
+      "required_concepts": [
+        "The provider took 11.8 s, the load balancer gives up after 10 s and answers 504, but api-2 kept running and charged the card (ch_3PqA81): a 504 does not mean the charge failed, it means the load balancer stopped waiting. The provider client's own timeout is 30 s.",
+        "checkout.js retries any 5xx at once with nothing that marks it as the same payment, so the retry reached api-4 while api-2 was still waiting on the provider and had not committed. The handler's check-then-act (`if order.status == \"paid\"`, then charge) read pending and charged again (ch_3PqB27): no row lock or conditional update, and create_charge is called without the idempotency key provider.py supports, so the provider can't recognise the repeat either.",
+        "The data now disagree: the second request's commit overwrote orders.payment_id with ch_3PqB27, payments has two rows for 88213 (no unique constraint on order_id), and the third attempt, after a 7.38 s wait for a pool connection, read paid and told the browser ch_3PqB27. Both charges exist at the provider. 37 orders were charged twice and 4 three times the same way."
+      ],
+      "good_additional_points": [
+        "payments.created_at is PostgreSQL's now(), the transaction start (14:22:03.122 and 14:22:13.789), which shows each transaction stayed open across the provider call",
+        "the third attempt waited 7.38 s for a pool connection: the pools were full, a sign of the next problem",
+        "timeouts are ordered wrongly: the inner call (30 s) outlives the outer one (10 s), so the work continues after the caller has given up",
+        "three charges happen when both retries read pending before the first commit",
+        "the 41 orders need reconciliation against the provider's records and refunds of the extra charges",
+        "checkout.js should back off between retries and treat a 504 on a payment as 'unknown', not 'failed'"
+      ]
+    },
+    "probes": [
+      {
+        "id": 1,
+        "next": [
+          {
+            "id": 1,
+            "next": [
+              {
+                "id": 1,
+                "next": [],
+                "hints": [
+                  {
+                    "id": 1,
+                    "text": "Compare the visibility timeout with the time a worker may spend on one message.",
+                    "entities": []
+                  },
+                  {
+                    "id": 2,
+                    "text": "A worker gets the charge back from the provider and then crashes before it deletes the message. What happens next?",
+                    "entities": []
+                  },
+                  {
+                    "id": 3,
+                    "text": "Which part of the system would recognise a repeated charge for the same order?",
+                    "entities": []
+                  }
+                ],
+                "duration": 3,
+                "editable": [],
+                "entities": [
+                  "e6"
+                ],
+                "run": [],
+                "solution": "It moves the problem; it does not remove it. Delivery is at least once, so a message can be processed twice by design: \"every message is processed\" is not \"processed once\". Worse, the visibility timeout (30 s) is shorter than the provider timeout (35 s): when the provider is slow, as yesterday, the message becomes visible again while the first worker is still waiting, a second worker charges again, and with max receives 5 a card can be charged up to five times: the same mistake as the 10-second load balancer in front of a 30-second provider call. A worker that crashes after the provider succeeds but before it commits and deletes also gets the message redelivered. Step 1 sends the message, then commits: if the commit fails, a charge happens for an order that was never marked; if the browser's retry (checkout.js still retries 5xx) reaches the endpoint twice, two messages are sent for one order and nothing deduplicates them. \"No change to the provider integration\" keeps the missing piece missing. To approve: a payment attempt row created in the same transaction as the status change (a transactional outbox: the row is the message, a relay publishes it), with a unique constraint so one order has one active attempt; the worker claims the attempt with a conditional update (status 'processing' only if still 'pending'); every provider call carries an idempotency key derived from the attempt id, so any redelivery gets the first charge back from the provider; provider timeout well under the visibility timeout, or the worker extends visibility while it waits; a timeout is an unknown outcome, so the worker asks the provider (by idempotency key) rather than charging blindly; a reconciliation job compares the provider's charges with the payments table daily and alerts; dead-letter messages alert someone. Also: card tokens in the queue for 4 days are both sensitive and useless after 10 minutes; keep the token only as long as needed. Use this for yesterday's 41 orders: reconcile and refund the extra charges.",
+                "highlights": [],
+                "description": "The team proposes moving charging to a background worker. Show proposal-charge-worker.md. Ask whether the design removes double charges as it claims, what can still charge a card twice, and what they would change before approving it. If they ask whether the provider can recognise a repeated request: yes, as the docstring in provider.py says, for 24 hours. If they ask whether the queue can extend a message's visibility timeout while a worker is busy: yes. If they ask about the card token: tokens are single-use and expire after 10 minutes. If they ask how many orders a minute at peak: about 120.",
+                "withheld_solution_parts": [
+                  "processed twice by design",
+                  "shorter than the provider timeout",
+                  "transactional outbox"
+                ]
+              }
+            ],
+            "hints": [
+              {
+                "id": 1,
+                "text": "What is each pay request doing with its connection while it waits for the provider?",
+                "entities": []
+              },
+              {
+                "id": 2,
+                "text": "Multiply the pay request rate by how long each one holds a connection. Compare it with the pool.",
+                "entities": []
+              },
+              {
+                "id": 3,
+                "text": "Why would GET /api/products fail during this hour?",
+                "entities": []
+              }
+            ],
+            "duration": 2,
+            "editable": [],
+            "entities": [
+              "e5"
+            ],
+            "run": [],
+            "solution": "Every pay request holds a pooled connection and an open transaction for the whole provider call: session.connection() begins the transaction at the start of the handler, the provider call happens inside it, and the commit waits for the handler to return. So PostgreSQL shows 36 of 40 connections idle in transaction, CPU at 12% and no lock waits: the database is idle, the pool is the limit. Little's law: 4.7 requests per second times about 9.6 s held is about 45 connections against 40; at 2.0 per second without retries it would have been about 19, so the retries pushed demand over the pool, and each retry added load while its earlier attempt was still holding a connection. GET /api/orders and GET /api/products share the same pools, so they waited up to 30 s for a connection (p99 wait 22 s) and 1,840 requests failed with the QueuePool timeout. Restructure: never hold a transaction across the network call. Short transaction 1: claim the order with a conditional update (pending to charging, only if still pending) and create the payment attempt, commit. Then call the provider with no connection held, using an idempotency key from the attempt. Short transaction 2: record the result (paid or failed). Also: provider timeout below the load balancer's 10 s, or answer 202 and let the page poll; a separate small pool, or a concurrency limit, for pay so it can't starve reads (a bulkhead); a circuit breaker when the provider is degraded; checkout.js backs off and stops retrying a 504 blindly. Raising the pool size moves the limit: 4 instances times 25 would take all 100 connections.",
+            "highlights": [],
+            "description": "Show incident-dashboard.png for the same hour. Ask what it shows, why endpoints that never call the card provider failed too, and how they would restructure the pay handler. If they ask whether PostgreSQL was the bottleneck: show nothing new; ask what the dashboard says about it. If they ask whether they can raise the pool size: max_connections is 100 and other services use about 30 of them.",
+            "withheld_solution_parts": [
+              "idle in transaction",
+              "across the network call",
+              "pushed demand over the pool"
+            ]
+          }
+        ],
+        "hints": [
+          {
+            "id": 1,
+            "text": "Follow the second attempt for order 88213 through the new code. What key does it carry, and what is in Redis when it arrives?",
+            "entities": []
+          },
+          {
+            "id": 2,
+            "text": "What does the customer see when a retry gets 409?",
+            "entities": []
+          },
+          {
+            "id": 3,
+            "text": "What would the test have to do to show a retry arriving during the provider call?",
+            "entities": []
+          }
+        ],
+        "duration": 3,
+        "editable": [],
+        "entities": [
+          "e4"
+        ],
+        "run": [],
+        "solution": "It wouldn't have saved order 88213. checkout.js calls crypto.randomUUID() inside the loop, so it sends a new key on every attempt: the retry is a different key and the server can't recognise it. Even with one key, the key is stored only after the charge succeeds, 11 s later, so a retry arriving during the provider call finds nothing in Redis and charges again: the same race as before, moved. redis.get followed later by redis.set is not atomic either; two requests can both pass the get. A duplicate gets 409 \"duplicate request\", and checkout.js shows that text to the customer as an error although they paid; a repeat should get the first request's stored response (same status and body), or a 409 meaning 'still in progress, retry later' while it is running. The 60-second TTL is shorter than a retry sequence can take with a slow provider and much shorter than the provider's 24 hours. The key isn't scoped to the order or checked against the request body, so a reused key on another order is rejected. The provider still gets no idempotency key, though provider.py supports one. The test sends two requests one after the other against a stub that answers at once, so it can't show the race. Ask for: the key created once per Pay press, before the loop, and reused on every retry; the server claims (order, key) atomically before charging (SET NX with an in-progress value, or an insert into an idempotency table with a unique constraint) and records the result with the stored response to replay it; the same key, or one derived from the payment attempt, passed to create_charge so the provider deduplicates too; a conditional update on the order (status 'charging' only if still 'pending') and a unique constraint so one order can't have two successful payments; a test with two concurrent requests and a slow provider stub.",
+        "highlights": [],
+        "description": "A teammate opened a pull request to stop double charges. Show the diff. Ask them to review it as they would on the team: what happens to yesterday's order 88213 with this change, what each part does under retries and concurrent requests, and what they would ask for instead. If they ask what checkout.js does with a 409: the same as any 4xx, it shows the response text to the customer. If they ask what Redis is used for already: sessions and rate limits; it is a single primary with a replica. If they ask how quickly the browser retries: at once, with no delay.",
+        "withheld_solution_parts": [
+          "new key on every attempt",
+          "claims (order, key) atomically",
+          "stored response"
+        ]
+      }
+    ],
+    "seed_hints": [
+      {
+        "id": 1,
+        "text": "Put the load balancer's three lines next to api-2's log lines. What was api-2 doing when the browser got its 504?",
+        "entities": []
+      },
+      {
+        "id": 2,
+        "text": "When api-4 read the order at 14:22:13.8, had api-2's transaction committed?",
+        "entities": []
+      },
+      {
+        "id": 3,
+        "text": "provider.py's create_charge accepts an argument the handler never passes. What is it for?",
+        "entities": []
+      }
+    ],
+    "withheld_solution_parts": [
+      "504 does not mean",
+      "check-then-act",
+      "idempotency key"
+    ],
+    "max_probes": 3,
+    "seed_duration": 4,
+    "description_sections": {
+      "task": "When a shop's card payment provider was slow for an hour, 41 customers were charged two or three times for one order. The candidate reads the code of the service behind the Pay button and the logs for one order, and explains step by step how the second charge happened. Then they review a colleague's fix, read the hour's system charts to explain why other pages failed too, and judge a plan to move card charging to a background job.",
+      "signal": "Can this person trace a double charge through retries, timeouts and a database transaction from the logs and code, and design a payment endpoint that is safe to retry?",
+      "audience": "Senior backend engineers (5 to 8 years) who build web services that handle payments or other actions that must happen once. Knowing Python, PostgreSQL, HTTP timeouts and retries, and message queues helps.",
+      "implement": "1. Explains, from the code, a diagram and one order's logs, how the card was charged twice. *(4 min)*\n2. Reviews a colleague's fix for repeated requests and says whether it would have stopped this. *(3 min)*\n3. Reads the system's charts for that hour, explains why pages that don't take payments failed too, and says how to change the payment code. *(2 min)*\n4. Judges a plan to charge cards in a background job, and says what could still charge a card twice. *(3 min)*",
+      "starting_state": "- The payment service's code (a small code folder), including the checkout page's script\n- A diagram of how a payment request travels, with each part's time limit\n- The logs for one affected order: the load balancer's, the service's, the payment provider's and the database's\n- Later: a colleague's code change, a screenshot of the hour's system charts, and a colleague's design for charging in a background job"
+    },
+    "seed_highlights": [
+      {
+        "entity_id": "e1",
+        "path": "app/payments.py",
+        "start_line": 20,
+        "end_line": 21
+      }
+    ]
+  },
+  "entities": [
+    {
+      "id": "e1",
+      "type": "repo",
+      "source": "author",
+      "meta": {
+        "files": 11,
+        "filename": "payments-api",
+        "text_bytes": 7419
+      },
+      "normalized_form": "Repository, 11 files:\n  README.md\n  app/config.py\n  app/db.py\n  app/main.py\n  app/models.py\n  app/orders.py\n  app/payments.py\n  app/provider.py\n  deploy/load-balancer.yaml\n  requirements.txt\n  web/checkout.js\n\n--- README.md ---\n# payments-api\n\nThe service behind the checkout page's **Pay** button.\n\n- `POST /api/orders/{order_id}/pay` with `{\"card_token\": ...}` charges the card\n  through the card payment provider's REST API and marks the order paid.\n- `GET /api/orders/{order_id}` returns an order (also used by the order page).\n- Four instances (api-1 to api-4) run behind one load balancer\n  (`deploy/load-balancer.yaml`). Each runs uvicorn with one worker process.\n- PostgreSQL 17 holds `orders` and `payments`.\n\nPython 3.12, FastAPI 0.118, SQLAlchemy 2.0, httpx 0.28.\n\n--- app/config.py ---\nfrom pydantic_settings import BaseSettings\n\n\nclass Settings(BaseSettings):\n    database_url: str\n    provider_url: str\n    provider_key: str\n\n\nsettings = Settings()\n\n--- app/db.py ---\nfrom sqlalchemy import create_engine\nfrom sqlalchemy.orm import sessionmaker\n\nfrom app.config import settings\n\nengine = create_engine(\n    settings.database_url,\n    pool_size=10,\n    max_overflow=0,\n    pool_timeout=30,\n)\nSessionLocal = sessionmaker(engine, expire_on_commit=False)\n\n\ndef get_session():\n    \"\"\"One session and one transaction per request. Commits when the request\n    handler returns; rolls back if it raises.\"\"\"\n    with SessionLocal() as session:\n        with session.begin():\n            yield session\n\n--- app/main.py ---\nimport logging\nimport time\n\nfrom fastapi import FastAPI, Request\n\nfrom app import orders, payments\n\nlogging.basicConfig(format=\"%(asctime)s %(levelname)s %(message)s\", level=logging.INFO)\nlog = logging.getLogger(\"http\")\n\napp = FastAPI()\napp.include_router(payments.router)\napp.include_router(orders.router)\n\n\n@app.middleware(\"http\")\nasync def log_requests(request: Request, call_next):\n    started = time.monotonic()\n    response = await call_next(request)\n    log.info(\"request done %s %s %s %.3fs\", request.method, request.url.path,\n             response.status_code, time.monotonic() - started)\n    return response\n\n--- app/models.py ---\nfrom datetime import datetime, timezone\n\nfrom sqlalchemy import BigInteger, DateTime, ForeignKey, Integer, String, func\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\n\ndef utcnow() -> datetime:\n    return datetime.now(timezone.utc)\n\n\nclass Base(DeclarativeBase):\n    pass\n\n\nclass Order(Base):\n    __tablename__ = \"orders\"\n\n    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)\n    customer_id: Mapped[int] = mapped_column(BigInteger, index=True)\n    status: Mapped[str] = mapped_column(String(16), default=\"pending\")  # pending | paid | cancelled\n    total_cents: Mapped[int] = mapped_column(Integer)\n    currency: Mapped[str] = mapped_column(String(3))\n    payment_id: Mapped[str | None] = mapped_column(String(64))\n    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)\n\n\nclass Payment(Base):\n    __tablename__ = \"payments\"\n\n    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)\n    order_id: Mapped[int] = mapped_column(ForeignKey(\"orders.id\"), index=True)\n    charge_id: Mapped[str] = mapped_column(String(64))\n    amount_cents: Mapped[int] = mapped_column(Integer)\n    # now() in PostgreSQL is the start time of the current transaction\n    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())\n\n--- app/orders.py ---\nfrom fastapi import APIRouter, Depends, HTTPException\nfrom sqlalchemy.orm import Session\n\nfrom app.db import get_session\nfrom app.models import Order\n\nrouter = APIRouter()\n\n\n@router.get(\"/api/orders/{order_id}\")\ndef get_order(order_id: int, session: Session = Depends(get_session)):\n    order = session.get(Order, order_id)\n    if order is None:\n        raise HTTPException(404, \"order not found\")\n    return {\"id\": order.id, \"status\": order.status, \"total_cents\": order.total_cents,\n            \"currency\": order.currency, \"payment_id\": order.payment_id}\n\n--- app/payments.py ---\nimport logging\nimport time\n\nfrom fastapi import APIRouter, Depends, HTTPException\nfrom pydantic import BaseModel\nfrom sqlalchemy.orm import Session\n\nfrom app import provider\nfrom app.db import get_session\nfrom app.models import Order, Payment\n\nrouter = APIRouter()\nlog = logging.getLogger(\"payments\")\n\n\nclass PayRequest(BaseModel):\n    card_token: str\n\n\n@router.post(\"/api/orders/{order_id}/pay\")\ndef pay(order_id: int, body: PayRequest, session: Session = Depends(get_session)):\n    t0 = time.monotonic()\n    session.connection()  # takes a connection from the pool and begins the transaction\n    log.info(\"db connection order=%s wait=%.2fs\", order_id, time.monotonic() - t0)\n\n    order = session.get(Order, order_id)\n    if order is None:\n        raise HTTPException(404, \"order not found\")\n    log.info(\"pay order=%s status_read=%s\", order.id, order.status)\n    if order.status == \"paid\":\n        return {\"status\": \"paid\", \"payment_id\": order.payment_id}\n\n    started = time.monotonic()\n    log.info(\"provider POST /v1/charges order=%s amount=%s\", order.id, order.total_cents)\n    charge = provider.create_charge(\n        amount_cents=order.total_cents,\n        currency=order.currency,\n        card_token=body.card_token,\n        description=f\"order {order.id}\",\n    )\n    log.info(\"provider %s charge=%s %.3fs\", charge[\"status\"], charge[\"id\"], time.monotonic() - started)\n\n    order.status = \"paid\"\n    order.payment_id = charge[\"id\"]\n    session.add(Payment(order_id=order.id, charge_id=charge[\"id\"], amount_cents=order.total_cents))\n    return {\"status\": \"paid\", \"payment_id\": charge[\"id\"]}\n\n--- app/provider.py ---\nimport httpx\n\nfrom app.config import settings\n\nclient = httpx.Client(\n    base_url=settings.provider_url,\n    timeout=httpx.Timeout(30.0, connect=5.0),\n    headers={\"Authorization\": f\"Bearer {settings.provider_key}\"},\n)\n\n\nclass ProviderError(Exception):\n    pass\n\n\ndef create_charge(amount_cents: int, currency: str, card_token: str, description: str,\n                  idempotency_key: str | None = None) -> dict:\n    \"\"\"POST /v1/charges. The provider keeps idempotency keys for 24 hours: a request\n    repeating a key gets the first request's result instead of a new charge.\"\"\"\n    headers = {\"Idempotency-Key\": idempotency_key} if idempotency_key else {}\n    resp = client.post(\n        \"/v1/charges\",\n        json={\"amount\": amount_cents, \"currency\": currency, \"source\": card_token,\n              \"description\": description},\n        headers=headers,\n    )\n    if resp.status_code >= 400:\n        raise ProviderError(f\"{resp.status_code}: {resp.text[:200]}\")\n    return resp.json()\n\n--- deploy/load-balancer.yaml ---\n# Load balancer in front of the API instances\nlisteners:\n  - port: 443\n    protocol: HTTPS\n    default_action: forward:api\n\ntarget_groups:\n  api:\n    targets: [api-1:8000, api-2:8000, api-3:8000, api-4:8000]\n    algorithm: round_robin\n    health_check:\n      path: /healthz\n      interval_seconds: 10\n\n# Time to wait for the upstream to send a response before answering 504.\nidle_timeout_seconds: 10\n\n--- requirements.txt ---\nfastapi==0.118.0\nuvicorn==0.37.0\nsqlalchemy==2.0.43\npsycopg[binary]==3.2.10\nhttpx==0.28.1\npydantic-settings==2.11.0\n\n--- web/checkout.js ---\n// Called when the customer presses \"Pay\" on the checkout page.\nexport async function payOrder(orderId, cardToken) {\n  for (let attempt = 1; attempt <= 3; attempt++) {\n    const res = await fetch(`/api/orders/${orderId}/pay`, {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ card_token: cardToken }),\n    });\n    if (res.ok) return res.json();\n    if (res.status < 500) throw new Error(await res.text());\n    // 5xx: the server had a problem, try again\n  }\n  throw new Error(\"Payment failed, please try again\");\n}\n"
+    },
+    {
+      "id": "e2",
+      "type": "excalidraw",
+      "source": "author",
+      "meta": {
+        "filename": "request-path.excalidraw"
+      },
+      "normalized_form": "Diagram.\nComponents (5): Browser (checkout page, web/checkout.js), Load balancer, API (4 instances, api-1 to api-4), PostgreSQL 17, Card payment provider API.\nConnections: Browser (checkout page, web/checkout.js) -> Load balancer [POST /api/orders/{id}/pay]; Load balancer -> API (4 instances, api-1 to api-4) [round robin; idle timeout 10 s, then 504 to the browser]; API (4 instances, api-1 to api-4) -> PostgreSQL 17 [SQLAlchemy pool: 10 connections per instance, no overflow, waits up to 30 s for a free one]; API (4 instances, api-1 to api-4) -> Card payment provider API [POST /v1/charges, timeout 30 s].\nNotes on the diagram: \"PostgreSQL max_connections = 100\"; \"Provider latency, normal day: p50 0.9 s, p99 1.4 s\"; \"Yesterday 14:05 to 14:58: provider degraded (its status page)\".\n"
+    },
+    {
+      "id": "e3",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 52,
+        "filename": "order-88213-logs.txt"
+      },
+      "normalized_form": "Logs for order 88213, yesterday afternoon. All sources use the same clock (UTC).\n\n== Load balancer access log: POST /api/orders/88213/pay ==\nreceived       client      upstream  status  upstream_time  note\n14:22:03.118   browser-7f  api-2     504     10.001 s       no response from upstream within idle timeout (10 s)\n14:22:13.164   browser-7f  api-4     504     10.000 s       no response from upstream within idle timeout (10 s)\n14:22:23.209   browser-7f  api-1     200      7.412 s\n\n== API application log, api-1, api-2 and api-4, merged by time (the log shipper adds the instance name) ==\n14:22:03.119 api-2 INFO db connection order=88213 wait=0.00s\n14:22:03.124 api-2 INFO pay order=88213 status_read=pending\n14:22:03.131 api-2 INFO provider POST /v1/charges order=88213 amount=4999\n14:22:13.786 api-4 INFO db connection order=88213 wait=0.62s\n14:22:13.791 api-4 INFO pay order=88213 status_read=pending\n14:22:13.801 api-4 INFO provider POST /v1/charges order=88213 amount=4999\n14:22:14.902 api-2 INFO provider succeeded charge=ch_3PqA81 11.771s\n14:22:14.910 api-2 INFO request done POST /api/orders/88213/pay 200 11.792s\n14:22:25.012 api-4 INFO provider succeeded charge=ch_3PqB27 11.211s\n14:22:25.020 api-4 INFO request done POST /api/orders/88213/pay 200 11.856s\n14:22:30.590 api-1 INFO db connection order=88213 wait=7.38s\n14:22:30.596 api-1 INFO pay order=88213 status_read=paid\n14:22:30.621 api-1 INFO request done POST /api/orders/88213/pay 200 7.412s\n\n== Card payment provider, charges with description \"order 88213\" (export from its dashboard) ==\ncharge_id   created   amount     status     idempotency_key\nch_3PqA81   14:22:14  49.99 EUR  succeeded  (none)\nch_3PqB27   14:22:25  49.99 EUR  succeeded  (none)\n\n== PostgreSQL, this morning ==\n=> SELECT id, status, payment_id, updated_at FROM orders WHERE id = 88213;\n  id   | status | payment_id | updated_at\n-------+--------+------------+-------------------\n 88213 | paid   | ch_3PqB27  | 14:22:25.019\n\n=> SELECT order_id, charge_id, amount_cents, created_at FROM payments WHERE order_id = 88213 ORDER BY id;\n order_id | charge_id | amount_cents | created_at\n----------+-----------+--------------+-------------------\n    88213 | ch_3PqA81 |         4999 | 14:22:03.122\n    88213 | ch_3PqB27 |         4999 | 14:22:13.789\n\n=> SELECT n AS payment_rows, count(*) AS orders\n   FROM (SELECT order_id, count(*) AS n FROM payments\n         WHERE created_at >= '14:00' AND created_at < '15:00'  -- yesterday\n         GROUP BY order_id) per_order\n   GROUP BY n ORDER BY n;\n payment_rows | orders\n--------------+--------\n            1 |   6339\n            2 |     37\n            3 |      4\n\nThe browser received this body for the third attempt: {\"status\":\"paid\",\"payment_id\":\"ch_3PqB27\"}\n"
+    },
+    {
+      "id": "e4",
+      "type": "code",
+      "source": "author",
+      "meta": {
+        "lines": 88,
+        "filename": "pr-idempotent-payments.diff"
+      },
+      "normalized_form": "Pull request: \"Idempotent payments\"\n\nDescription: Adds idempotency keys end to end. The checkout page sends an\nIdempotency-Key header; the API remembers each key in Redis and rejects a\nrepeated key with 409, so a retried request can't charge twice. New test:\nsending the same key twice returns 409 and the provider is called once.\n\nChecks: 41 tests passed (the provider is a stub that answers at once).\n\ndiff --git a/app/payments.py b/app/payments.py\n--- a/app/payments.py\n+++ b/app/payments.py\n@@ -1,16 +1,19 @@\n import logging\n import time\n \n-from fastapi import APIRouter, Depends, HTTPException\n+from fastapi import APIRouter, Depends, Header, HTTPException\n from pydantic import BaseModel\n from sqlalchemy.orm import Session\n \n from app import provider\n+from app.cache import redis\n from app.db import get_session\n from app.models import Order, Payment\n \n router = APIRouter()\n log = logging.getLogger(\"payments\")\n+\n+IDEMPOTENCY_TTL_SECONDS = 60\n \n \n class PayRequest(BaseModel):\n@@ -18,7 +21,15 @@\n \n \n @router.post(\"/api/orders/{order_id}/pay\")\n-def pay(order_id: int, body: PayRequest, session: Session = Depends(get_session)):\n+def pay(\n+    order_id: int,\n+    body: PayRequest,\n+    idempotency_key: str = Header(...),\n+    session: Session = Depends(get_session),\n+):\n+    if redis.get(f\"idem:{idempotency_key}\"):\n+        raise HTTPException(409, \"duplicate request\")\n+\n     t0 = time.monotonic()\n     session.connection()  # takes a connection from the pool and begins the transaction\n     log.info(\"db connection order=%s wait=%.2fs\", order_id, time.monotonic() - t0)\n@@ -43,4 +54,5 @@\n     order.status = \"paid\"\n     order.payment_id = charge[\"id\"]\n     session.add(Payment(order_id=order.id, charge_id=charge[\"id\"], amount_cents=order.total_cents))\n+    redis.set(f\"idem:{idempotency_key}\", \"1\", ex=IDEMPOTENCY_TTL_SECONDS)\n     return {\"status\": \"paid\", \"payment_id\": charge[\"id\"]}\ndiff --git a/web/checkout.js b/web/checkout.js\n--- a/web/checkout.js\n+++ b/web/checkout.js\n@@ -3,7 +3,10 @@\n   for (let attempt = 1; attempt <= 3; attempt++) {\n     const res = await fetch(`/api/orders/${orderId}/pay`, {\n       method: \"POST\",\n-      headers: { \"Content-Type\": \"application/json\" },\n+      headers: {\n+        \"Content-Type\": \"application/json\",\n+        \"Idempotency-Key\": crypto.randomUUID(),\n+      },\n       body: JSON.stringify({ card_token: cardToken }),\n     });\n     if (res.ok) return res.json();\ndiff --git a/tests/test_idempotency.py b/tests/test_idempotency.py\nnew file mode 100644\n--- /dev/null\n+++ b/tests/test_idempotency.py\n@@ -0,0 +1,12 @@\n+from app.main import app\n+from fastapi.testclient import TestClient\n+\n+\n+def test_same_key_twice_returns_409(order_1_pending, provider_stub):\n+    client = TestClient(app)\n+    headers = {\"Idempotency-Key\": \"k1\"}\n+    r1 = client.post(\"/api/orders/1/pay\", json={\"card_token\": \"tok_test\"}, headers=headers)\n+    r2 = client.post(\"/api/orders/1/pay\", json={\"card_token\": \"tok_test\"}, headers=headers)\n+    assert r1.status_code == 200\n+    assert r2.status_code == 409\n+    assert provider_stub.calls == 1\n"
+    },
+    {
+      "id": "e5",
+      "type": "image",
+      "source": "author",
+      "meta": {
+        "filename": "incident-dashboard.png",
+        "content_type": "image/png",
+        "normalized_by": "author"
+      },
+      "normalized_form": "A screenshot of the team's metrics dashboard for yesterday 13:30 to 15:30, one-minute points. A grey band marks 14:05 to 14:58. Five panels.\n\n**1. Card provider, POST /v1/charges latency (seen from the API):** before 14:05, p50 0.9 s and p99 1.4 s. From 14:05 to 14:58, p50 9.6 s and p99 12.4 s. Back to normal at 14:59.\n\n**2. POST /api/orders/{id}/pay requests received by the API, all instances:** about 2.0 per second before 14:05; about 4.7 per second from 14:05 to 14:58. Legend totals for 14:05 to 14:58: 14,910 requests, 6,380 distinct orders, 8,530 answered 504 by the load balancer.\n\n**3. SQLAlchemy connection pool, per instance (checked out / size):** api-1 to api-4 all at 1 to 2 of 10 before 14:05; all four at 10 of 10 from 14:07 to 14:56. Pool wait time p99: 22.0 s. Error counter \"QueuePool limit of size 10 overflow 0 reached, connection timed out, timeout 30.00\": 1,840 in the window (all endpoints), each answered 500.\n\n**4. PostgreSQL:** connections 40 of max_connections 100 from 14:07 to 14:56. By state, average over the window: \"idle in transaction\" 36, \"active\" 3, \"idle\" 1. CPU 12%. Lock waits: 0. Oldest open transaction, p99: 12.6 s.\n\n**5. Other endpoints:** GET /api/orders/{id} p99 latency 80 ms before 14:05, 24.1 s during the window. GET /api/products error rate (5xx) 0.0% before, 9.2% during. Neither endpoint calls the card provider.\n\n(For the interviewer: 4.7 pay requests per second, each holding a connection for about 9.6 s, needs about 45 connections; the four pools have 40. Without retries, 2.0 per second would need about 19.)\n"
+    },
+    {
+      "id": "e6",
+      "type": "markdown",
+      "source": "author",
+      "meta": {
+        "filename": "proposal-charge-worker.md"
+      },
+      "normalized_form": "# Proposal: charge cards in a background worker\n\nProblem: the pay endpoint keeps the request open while the card provider\nanswers, so a slow provider means timeouts, retries and double charges.\n\n## Design\n\n1. `POST /api/orders/{id}/pay` sends a message `{\"order_id\": ..., \"card_token\": ...}`\n   to the `charges` queue, then sets the order's status to `payment_processing`\n   and commits. It answers 202 at once.\n2. Workers (8 of them) receive messages. For each message: call\n   `POST /v1/charges` (timeout 35 s), set the order to `paid` with the charge id,\n   insert into `payments`, commit, then delete the message from the queue.\n3. The checkout page polls `GET /api/orders/{id}` every 2 s until the status is\n   `paid` or `failed`.\n\n## Queue settings\n\n| Setting | Value |\n|---|---|\n| Delivery | at least once |\n| Visibility timeout | 30 s: a received message is hidden from other workers for 30 s; if it has not been deleted by then, it is delivered again |\n| Max receives | 5, then the message moves to the dead-letter queue |\n| Retention | 4 days |\n\n## Why this fixes double charges\n\nThe queue guarantees that every message is processed, and only a worker\ncharges cards, so the browser's retries can no longer create a second charge.\n\n## Rollout\n\nNext sprint. No change to the provider integration (`app/provider.py`).\n"
+    }
+  ]
+}
